@@ -10,7 +10,7 @@
     "typecheck": "pyright",
     "boundaries": "uv run --frozen lint-imports",
     "test": "uv run --frozen coverage run -m pytest && uv run --frozen coverage json -q && uv run --frozen python scripts/check_coverage.py",
-    "eval": "uv run --frozen python -m evals.run",
+    "eval": "sh scripts/eval.sh",
     "generate": "uv run --frozen python -m intent_harness.contract openapi.json"
   },
   "devDependencies": {

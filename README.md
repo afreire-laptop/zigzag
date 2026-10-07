@@ -112,6 +112,8 @@ The handoff export format is described in [docs/reference/handoff-format.md](doc
 
 `pnpm eval --budget-usd 2 --max-calls 40 --repeats 2` runs the journey variations and negative controls against the configured live model. It writes raw results and a summary to `observations/`, which is git-ignored.
 
+It reads `.env`, as `pnpm dev` does, except that variables already set in the shell take precedence. To evaluate another model without editing `.env`, run `INTENT_MODEL=provider/other-model pnpm eval …`. A variable left exported from an earlier session also wins over `.env`, and the summary's heading names the model it requested.
+
 The run refuses to start without a budget. It counts every request it submits, including automatic retries, and stops if any request's cost is unknown, including a request that timed out after it was sent. Judge each scenario and record the result in [docs/evaluations/live-model-observations.md](docs/evaluations/live-model-observations.md), following [the protocol](docs/evaluations/live-model-protocol.md).
 
 ## License

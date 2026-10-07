@@ -1,7 +1,9 @@
 """Live evaluation runner. Separate from the deterministic gates; it never runs in CI.
 
-    uv run python -m evals.run --budget-usd 2.00 --max-calls 40 --repeats 2 [--cases short-reply,clear-brief]
+    pnpm eval --budget-usd 2.00 --max-calls 40 --repeats 2 [--cases short-reply,clear-brief]
 
+`pnpm eval` runs this module through scripts/eval.sh, which also reads the repository's .env; variables already set
+in the shell take precedence. Run directly with `uv run python -m evals.run`, it sees only the shell's variables.
 It needs INTENT_MODEL_MODE=live with INTENT_OPENROUTER_API_KEY and INTENT_MODEL, and refuses to start without a
 spending budget. Every request submitted counts against the budget, including automatic retries; a request whose
 cost is unknown, such as one that timed out after it was sent, stops the run. Every case runs through the same
