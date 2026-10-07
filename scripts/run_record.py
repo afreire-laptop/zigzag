@@ -1,0 +1,228 @@
+"""Writes the public run record of a workflow run, from the private evidence in its .reviews/<run>/ folder.
+
+    python3 scripts/run_record.py --run .reviews/<run> --title "<change>" --summary "<one or two sentences>" \\
+        [--decision "YYYY-MM-DD: <decision>"]... [--not-verified "<item>"]... --out docs/records/<date>-<slug>.md
+
+It reads the findings register (findings.md), the review reports the register links, and the output that
+`scripts/readiness.py --out <run>/readiness.md` wrote. It copies structured fields only: never a report's text, its
+invocation id, or the register's evidence notes, except the evidence that refutes a rejected finding. The SHA-256 of
+each raw file binds the record to it.
+
+It never overwrites a record, and writes nothing that `check_docs.record_leaks` rejects: a local path, a session or
+thread id, or a cost. Exits 0 when the record was written, 1 when it was refused, and 2 when an input is missing.
+"""
+
+import argparse
+import hashlib
+import os
+import re
+import sys
+from collections.abc import Sequence
+from dataclasses import dataclass
+from pathlib import Path
+
+from check_docs import PRIVATE_PREFIXES, record_leaks
+from readiness import Finding, Report, git, linked_reports, parse_findings
+
+ANSI = re.compile(r"\x1b\[[0-9;]*m")
+MARKDOWN_LINK = re.compile(r"\[(?P<label>[^\]]*)\]\((?P<target>[^)\s]+)\)")
+GATE_ROW = re.compile(r"^\| `(?P<gate>[^`]+)` \| (?P<reason>.*?) \| (?P<result>(?:pass|FAIL|not run).*) \|$")
+CHECKED = re.compile(
+    r"^Candidate `(?P<candidate>[0-9a-f]+)` · base `(?P<base>[0-9a-f]+)` · checked (?P<date>[\d-]{10})"
+)
+
+
+@dataclass(frozen=True)
+class ReadinessOutput:
+    title: str
+    candidate: str
+    base: str
+    date: str
+    gates: tuple[tuple[str, str, str], ...]
+    reasons: tuple[str, ...]
+    not_established: tuple[str, ...]
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def cell(text: str) -> str:
+    """Text that stays inside one Markdown table cell."""
+    return ANSI.sub("", text).replace("\\|", "|").replace("|", "\\|").replace("\n", " ").strip()
+
+
+def bullets(lines: Sequence[str], heading: str) -> tuple[str, ...]:
+    """The `- ` items under `## <heading>`, up to the next heading."""
+    items: list[str] = []
+    inside = False
+    for line in lines:
+        if line.startswith("#"):
+            inside = line.removeprefix("## ").strip() == heading
+        elif inside and line.startswith("- "):
+            items.append(ANSI.sub("", line[2:]).strip())
+    return tuple(items)
+
+
+def read_readiness(path: Path) -> ReadinessOutput | None:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    checked = next((m for m in map(CHECKED.match, lines) if m), None)
+    if not lines or not lines[0].startswith("# Readiness: ") or checked is None:
+        return None
+    return ReadinessOutput(
+        title=lines[0].removeprefix("# Readiness: ").strip(),
+        candidate=checked["candidate"],
+        base=checked["base"],
+        date=checked["date"],
+        gates=tuple((m["gate"], m["reason"], m["result"]) for m in map(GATE_ROW.match, lines) if m),
+        reasons=bullets(lines, "Reasons"),
+        not_established=bullets(lines, "Not established by this check"),
+    )
+
+
+def relink(text: str, root: Path, register: Path, out: Path) -> str:
+    """Re-points relative links from the register's folder to the record's. A link to a private or missing file, or
+    one outside the repository, becomes its label."""
+
+    def replace(match: re.Match[str]) -> str:
+        label, target = match["label"], match["target"]
+        if re.match(r"^[a-z][a-z0-9+.-]*:", target) or target.startswith("#"):
+            return match[0]
+        path, _, anchor = target.partition("#")
+        resolved = (register.parent / path).resolve()
+        if not resolved.exists() or not resolved.is_relative_to(root):
+            return label
+        if resolved.relative_to(root).as_posix().startswith(PRIVATE_PREFIXES):
+            return label
+        return f"[{label}]({os.path.relpath(resolved, out.parent)}{'#' + anchor if anchor else ''})"
+
+    return MARKDOWN_LINK.sub(replace, text)
+
+
+def outcome(finding: Finding) -> str:
+    return {"fixed": finding.fix, "deferred": finding.tracking, "rejected": finding.evidence}.get(
+        finding.disposition, ""
+    )
+
+
+def render(
+    args: argparse.Namespace,
+    root: Path,
+    out: Path,
+    register: Path,
+    readiness_path: Path,
+    checked: ReadinessOutput,
+    reports: Sequence[Report],
+    findings: Sequence[Finding],
+) -> str:
+    status = "Complete" if checked.title.startswith("READY") else "Incomplete"
+    lines = [
+        f"# {args.title}: run record",
+        "",
+        f"**Status:** {status} · **Date:** {checked.date} · **Base:** `{checked.base[:12]}` · "
+        f"**Candidate:** `{checked.candidate[:12]}` · **Readiness:** {checked.title}",
+        "",
+        args.summary,
+        "",
+        "This record summarizes one workflow run, and was generated by `scripts/run_record.py`. The raw reviewer "
+        "reports, the findings register, and the readiness output stay in the git-ignored `.reviews/` on the machine "
+        "that ran it. The SHA-256 of each lets its holder show that this summary matches it.",
+        "",
+        "## Gates",
+        "",
+        "| Gate | Required because | Result |",
+        "| --- | --- | --- |",
+        *(f"| `{gate}` | {cell(reason)} | {cell(result)} |" for gate, reason, result in checked.gates),
+        "",
+        "## Reviews",
+        "",
+        "| Round | Reviewer | Tool | Model | Range | Status | Findings | Raw report SHA-256 |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    rounds: dict[str, int] = {}
+    for report in reports:
+        rounds[report.reviewer] = rounds.get(report.reviewer, 0) + 1
+        lines.append(
+            f"| {rounds[report.reviewer]} | {cell(report.reviewer)} | {cell(report.tool)} | {cell(report.model)} | "
+            f"`{report.baseline[:7]}..{report.reviewed_commit[:7]}` | {report.status} | "
+            f"{', '.join(report.findings) or 'none'} | `{sha256(root / report.path)}` |"
+        )
+    lines += [
+        "",
+        "| Private record | SHA-256 |",
+        "| --- | --- |",
+        f"| Findings register | `{sha256(register)}` |",
+        f"| Readiness output | `{sha256(readiness_path)}` |",
+        "",
+        "## Findings",
+        "",
+    ]
+    if findings:
+        lines += [
+            "| ID | Severity | Source | Finding | Disposition | Fix or tracking |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ]
+        lines += [
+            f"| {cell(f.id)} | {cell(f.severity)} | {cell(f.source)} | {cell(f.summary)} | {f.disposition} | "
+            f"{cell(relink(outcome(f), root, register, out))} |"
+            for f in findings
+        ]
+    else:
+        lines.append("None.")
+    if checked.reasons:
+        lines += ["", "## Readiness reasons", "", *(f"- {r}" for r in checked.reasons)]
+    lines += ["", "## Decisions", "", *(f"- {d}" for d in args.decision or ["None recorded."])]
+    lines += ["", "## Not verified", "", *(f"- {n}" for n in (*checked.not_established, *args.not_verified))]
+    return "\n".join(lines) + "\n"
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter, allow_abbrev=False
+    )
+    parser.add_argument("--run", required=True, help="the run's private folder, .reviews/<run>")
+    parser.add_argument("--title", required=True, help="the change, for the record's heading")
+    parser.add_argument("--summary", required=True, help="one or two sentences on what the change did")
+    parser.add_argument("--decision", action="append", default=[], help="an owner's decision, dated; repeatable")
+    parser.add_argument(
+        "--not-verified", action="append", default=[], help="something the run does not establish; repeatable"
+    )
+    parser.add_argument("--out", required=True, help="the record to write: docs/records/<date>-<slug>.md")
+    args = parser.parse_args(argv)
+
+    root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel").stdout.strip() or ".").resolve()
+    run = Path(args.run).resolve()
+    out = Path(args.out).resolve()
+    register, readiness_path = run / "findings.md", run / "readiness.md"
+    for required in (register, readiness_path):
+        if not required.is_file():
+            print(
+                f"{args.run}: missing {required.name}; write it with ih-review and readiness.py --out", file=sys.stderr
+            )
+            return 2
+    checked = read_readiness(readiness_path)
+    if checked is None:
+        print(f"{args.run}/readiness.md is not output of scripts/readiness.py", file=sys.stderr)
+        return 2
+    if out.exists():
+        print(f"{args.out} already exists; run records are immutable, so write a new one", file=sys.stderr)
+        return 1
+
+    text = register.read_text(encoding="utf-8")
+    findings, _ = parse_findings(text)
+    reports = [report for report, _ in linked_reports(root, register, text)]
+    record = render(args, root, out, register, readiness_path, checked, reports, findings)
+    name = out.relative_to(root).as_posix() if out.is_relative_to(root) else args.out
+    leaks = record_leaks(name, record)
+    if leaks:
+        print("\n".join(leaks), file=sys.stderr)
+        print(f"{name} was not written: a run record is public. Fix the register or the arguments.", file=sys.stderr)
+        return 1
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(record, encoding="utf-8")
+    print(f"wrote {name}; read it, then commit it alone, as a report-only commit")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

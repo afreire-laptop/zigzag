@@ -1,0 +1,418 @@
+{
+  "note": "Canned responses for fixture mode and tests only. They are written by hand and are never live model output.",
+  "texts": {
+    "briefs": [
+      {
+        "label": "Clear brief (journey 1)",
+        "text": "Frontend engineers need to understand the required changes for one component-library release without searching across documents. Explore a static migration guide for Button and Input. It will use our changelog and migration documentation. Exclude automated code changes, application scanning, and analytics. The next step is a design brief, not implementation. We have not tested whether a consolidated guide saves time."
+      },
+      {
+        "label": "Ambiguous brief (journey 2)",
+        "text": "Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process."
+      },
+      {
+        "label": "Malformed reading, then success",
+        "text": "Plan a weekend food drive with a volunteer group. The next step is a planning checklist."
+      }
+    ],
+    "replies": [
+      {
+        "label": "Detailed reply",
+        "text": "Coordination during service first. Explore shift managers as the primary user. Owner reporting is outside this discovery round. Leave the channel undecided; I want interviews before deciding whether to build software."
+      },
+      {
+        "label": "Short reply",
+        "text": "Coordination first."
+      },
+      {
+        "label": "Defer reply",
+        "text": "Keep both possibilities open; I need to understand current practices first."
+      }
+    ],
+    "paraphrasedBrief": "Small owner-run restaurants keep getting caught out when something goes wrong mid-shift: a fridge fails, a supplier doesn't show, someone calls in sick. We want handling these problems to be simpler, and owners should be able to see what happened. It's not clear to me yet whether this calls for an app or just a better way of working."
+  },
+  "rules": [
+    {
+      "name": "clear brief",
+      "when": {
+        "mode": "brief",
+        "text": "Frontend engineers need to understand the required changes for one component-library release without searching across documents. Explore a static migration guide for Button and Input. It will use our changelog and migration documentation. Exclude automated code changes, application scanning, and analytics. The next step is a design brief, not implementation. We have not tested whether a consolidated guide saves time."
+      },
+      "respond": [
+        {
+          "extracted": [
+            {
+              "kind": "outcome",
+              "text": "Frontend engineers understand the required changes for one release without searching across documents.",
+              "quote": "understand the required changes for one component-library release without searching across documents"
+            },
+            {
+              "kind": "audience",
+              "text": "Frontend engineers upgrading one component-library release.",
+              "quote": "Frontend engineers need to understand the required changes for one component-library release"
+            },
+            {
+              "kind": "direction",
+              "text": "Explore a static migration guide.",
+              "quote": "Explore a static migration guide"
+            },
+            {
+              "kind": "scope",
+              "text": "Button and Input.",
+              "quote": "for Button and Input"
+            },
+            {
+              "kind": "constraint",
+              "text": "Use the changelog and migration documentation as sources.",
+              "quote": "It will use our changelog and migration documentation"
+            },
+            {
+              "kind": "exclusion",
+              "text": "Automated code changes.",
+              "quote": "Exclude automated code changes"
+            },
+            {
+              "kind": "exclusion",
+              "text": "Application scanning.",
+              "quote": "application scanning"
+            },
+            {
+              "kind": "exclusion",
+              "text": "Analytics.",
+              "quote": "and analytics"
+            },
+            {
+              "kind": "nextStep",
+              "text": "Prepare a design brief, not an implementation.",
+              "quote": "The next step is a design brief, not implementation"
+            }
+          ],
+          "resolutions": [],
+          "newItems": [
+            {
+              "ref": "new1",
+              "kind": "assumption",
+              "text": "A consolidated guide saves engineers time.",
+              "basis": "Stated as untested in your brief.",
+              "quote": "We have not tested whether a consolidated guide saves time",
+              "effect": "If it does not, the guide may not be worth maintaining. It does not block the design brief.",
+              "options": [],
+              "deferEffect": null
+            },
+            {
+              "ref": "new2",
+              "kind": "needed",
+              "text": "The release's changelog and migration documentation.",
+              "basis": "Named in your brief but not supplied.",
+              "quote": "It will use our changelog and migration documentation",
+              "effect": "Needed before release-specific guide content can be written. Not needed for the design brief.",
+              "options": [],
+              "deferEffect": null
+            }
+          ],
+          "focus": null
+        }
+      ]
+    },
+    {
+      "name": "ambiguous brief",
+      "when": {
+        "mode": "brief",
+        "text": "Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process."
+      },
+      "respond": [
+        {
+          "extracted": [
+            {
+              "kind": "outcome",
+              "text": "Help independent restaurants deal with operational incidents.",
+              "quote": "Help independent restaurants deal with operational incidents"
+            },
+            {
+              "kind": "constraint",
+              "text": "Easy to use.",
+              "quote": "It should be easy to use"
+            },
+            {
+              "kind": "outcome",
+              "text": "Owners have visibility.",
+              "quote": "give owners visibility"
+            }
+          ],
+          "resolutions": [],
+          "newItems": [
+            {
+              "ref": "new1",
+              "kind": "question",
+              "text": "Which improvement should we investigate first?",
+              "basis": "Your brief names incidents and owner visibility but not the primary user or the moment that matters most.",
+              "quote": null,
+              "effect": "This changes whom we speak to and which incident situations we examine.",
+              "options": [
+                {
+                  "label": "Coordination during service",
+                  "description": "How people respond while an incident is happening.",
+                  "tradeoff": "May introduce work during a busy period.",
+                  "establishes": [
+                    {
+                      "kind": "direction",
+                      "text": "Investigate how incidents are coordinated during service."
+                    }
+                  ]
+                },
+                {
+                  "label": "Owner visibility afterwards",
+                  "description": "How owners understand incidents and follow up.",
+                  "tradeoff": "May leave immediate coordination unchanged.",
+                  "establishes": [
+                    {
+                      "kind": "direction",
+                      "text": "Investigate how owners understand incidents and follow up afterwards."
+                    }
+                  ]
+                }
+              ],
+              "deferEffect": "Investigate both before choosing. This requires a broader discovery effort."
+            },
+            {
+              "ref": "new2",
+              "kind": "question",
+              "text": "Does this need new software, a better process, or both?",
+              "basis": "Your brief says this is unknown.",
+              "quote": "I don't know whether we need new software or a better process",
+              "effect": "Decides whether later work considers building software or changing practice.",
+              "options": [],
+              "deferEffect": "Discovery examines current practice without assuming software."
+            },
+            {
+              "ref": "new3",
+              "kind": "assumption",
+              "text": "Independent restaurants currently struggle to handle operational incidents.",
+              "basis": "Agent inference from the brief; no supporting evidence supplied.",
+              "quote": null,
+              "effect": "If incidents are already handled well, the effort may not be worthwhile. Early interviews can check this.",
+              "options": [],
+              "deferEffect": null
+            }
+          ],
+          "focus": "new1"
+        }
+      ]
+    },
+    {
+      "name": "malformed reading, then success",
+      "when": {
+        "mode": "brief",
+        "text": "Plan a weekend food drive with a volunteer group. The next step is a planning checklist."
+      },
+      "respond": [
+        "{ this reading is not JSON",
+        {
+          "extracted": [
+            {
+              "kind": "outcome",
+              "text": "Plan a weekend food drive with a volunteer group.",
+              "quote": "Plan a weekend food drive with a volunteer group"
+            },
+            {
+              "kind": "nextStep",
+              "text": "Prepare a planning checklist.",
+              "quote": "The next step is a planning checklist"
+            }
+          ],
+          "resolutions": [],
+          "newItems": [],
+          "focus": null
+        }
+      ]
+    },
+    {
+      "name": "detailed reply",
+      "when": {
+        "mode": "reply",
+        "brief": "Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process.",
+        "text": "Coordination during service first. Explore shift managers as the primary user. Owner reporting is outside this discovery round. Leave the channel undecided; I want interviews before deciding whether to build software."
+      },
+      "respond": [
+        {
+          "extracted": [
+            {
+              "kind": "direction",
+              "text": "Investigate coordination during service first.",
+              "quote": "Coordination during service first"
+            },
+            {
+              "kind": "audience",
+              "text": "Shift managers, as the primary user to explore.",
+              "quote": "Explore shift managers as the primary user"
+            },
+            {
+              "kind": "exclusion",
+              "text": "Owner reporting, for this discovery round.",
+              "quote": "Owner reporting is outside this discovery round"
+            },
+            {
+              "kind": "nextStep",
+              "text": "Interviews before deciding whether to build software.",
+              "quote": "I want interviews before deciding whether to build software"
+            }
+          ],
+          "resolutions": [
+            {
+              "questionId": {
+                "questionText": "Which improvement should we investigate first?"
+              },
+              "status": "answered",
+              "quote": "Coordination during service first"
+            },
+            {
+              "questionId": {
+                "questionText": "Does this need new software, a better process, or both?"
+              },
+              "status": "deferred",
+              "quote": "Leave the channel undecided"
+            }
+          ],
+          "newItems": [
+            {
+              "ref": "new1",
+              "kind": "assumption",
+              "text": "Shift managers have the authority and availability to coordinate incidents during service.",
+              "basis": "Agent inference; no supporting evidence supplied.",
+              "quote": null,
+              "effect": "If not, coordination may rest with other roles. Interviews should check who notices incidents and who can act.",
+              "options": [],
+              "deferEffect": null
+            }
+          ],
+          "focus": null
+        }
+      ]
+    },
+    {
+      "name": "short reply",
+      "when": {
+        "mode": "reply",
+        "brief": "Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process.",
+        "text": "Coordination first."
+      },
+      "respond": [
+        {
+          "extracted": [
+            {
+              "kind": "direction",
+              "text": "Investigate coordination first.",
+              "quote": "Coordination first"
+            }
+          ],
+          "resolutions": [
+            {
+              "questionId": {
+                "questionText": "Which improvement should we investigate first?"
+              },
+              "status": "answered",
+              "quote": "Coordination first"
+            }
+          ],
+          "newItems": [],
+          "focus": null
+        }
+      ]
+    },
+    {
+      "name": "deferring reply",
+      "when": {
+        "mode": "reply",
+        "brief": "Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process.",
+        "text": "Keep both possibilities open; I need to understand current practices first."
+      },
+      "respond": [
+        {
+          "extracted": [
+            {
+              "kind": "nextStep",
+              "text": "Understand current practices first.",
+              "quote": "I need to understand current practices first"
+            }
+          ],
+          "resolutions": [
+            {
+              "questionId": {
+                "questionText": "Which improvement should we investigate first?"
+              },
+              "status": "deferred",
+              "quote": "Keep both possibilities open"
+            }
+          ],
+          "newItems": [],
+          "focus": null
+        }
+      ]
+    },
+    {
+      "name": "follow-up after choosing coordination",
+      "when": {
+        "mode": "reassess",
+        "brief": "Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process.",
+        "lastSelectedOptionLabel": "Coordination during service",
+        "absentQuestion": "Whose coordination should the interviews focus on first?"
+      },
+      "respond": [
+        {
+          "extracted": [],
+          "resolutions": [],
+          "newItems": [
+            {
+              "ref": "new1",
+              "kind": "question",
+              "text": "Whose coordination should the interviews focus on first?",
+              "basis": "The chosen focus does not say who coordinates a response during service.",
+              "quote": null,
+              "effect": "Determines whom to recruit for interviews and which moments of service to examine.",
+              "options": [
+                {
+                  "label": "Shift managers",
+                  "description": "The person running the shift when an incident happens.",
+                  "tradeoff": "May miss how front-line staff notice and report incidents.",
+                  "establishes": [
+                    {
+                      "kind": "audience",
+                      "text": "Shift managers, as the first discovery focus."
+                    }
+                  ]
+                },
+                {
+                  "label": "Front-line staff",
+                  "description": "Servers and kitchen staff who usually notice incidents first.",
+                  "tradeoff": "May miss who has authority to act.",
+                  "establishes": [
+                    {
+                      "kind": "audience",
+                      "text": "Front-line staff, as the first discovery focus."
+                    }
+                  ]
+                }
+              ],
+              "deferEffect": "Interview a mix of roles; the primary user stays open."
+            }
+          ],
+          "focus": "new1"
+        }
+      ]
+    },
+    {
+      "name": "nothing further after any other choice",
+      "when": {
+        "mode": "reassess"
+      },
+      "respond": [
+        {
+          "extracted": [],
+          "resolutions": [],
+          "newItems": [],
+          "focus": null
+        }
+      ]
+    }
+  ]
+}

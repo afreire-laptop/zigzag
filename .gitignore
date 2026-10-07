@@ -1,0 +1,43 @@
+# Credentials and local configuration. Only the sanitized example is tracked.
+.env
+.env.*
+!.env.example
+
+# Runtime project data, operation records, and raw model exchanges.
+data/
+# Raw live-model evaluation output. Commit only reviewed, sanitized evidence under docs/.
+observations/
+
+# Dependencies and toolchain caches.
+node_modules/
+.pnpm-store/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.turbo/
+
+# Generated build, coverage, and test outputs.
+dist/
+build/
+coverage/
+htmlcov/
+.coverage
+.coverage.*
+coverage.json
+coverage.xml
+test-results/
+playwright-report/
+blob-report/
+*.tsbuildinfo
+
+# Local machine and editor settings.
+.DS_Store
+.idea/
+.vscode/
+*.tmp
+*.log
+
+# Raw review reports, findings registers, and readiness output. Commit only the run record under docs/records/.
+.reviews/

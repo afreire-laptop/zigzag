@@ -1,0 +1,108 @@
+[project]
+name = "intent-harness-api"
+version = "0.2.0"
+description = "Intent Harness API: domain authority, persistence, and model operations."
+requires-python = ">=3.14,<3.15"
+dependencies = [
+  "fastapi==0.142.2",
+  "httpx==0.28.1",
+  "pydantic==2.13.5",
+  "uvicorn==0.54.0",
+]
+
+[dependency-groups]
+dev = [
+  "coverage[toml]==7.16.2",
+  "import-linter==2.15",
+  "pytest==9.1.1",
+  "pytest-timeout==2.4.0",
+  "ruff==0.16.10",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv]
+required-version = "==0.12.23"
+
+[tool.uv.build-backend]
+module-name = "intent_harness"
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "C4", "UP", "SIM", "RET", "RUF", "PT", "N", "ASYNC", "PERF", "DTZ", "ARG", "PIE", "T20", "S"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "ARG"]
+# Handoff keys are the camelCase export format (intent-harness.handoff/v0).
+"src/intent_harness/domain/handoff.py" = ["N815"]
+"evals/**" = ["T20", "ARG"]  # checks implement one (proposal, project) signature
+"scripts/**" = ["T20"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts", "evals"]
+typeCheckingMode = "strict"
+pythonVersion = "3.14"
+venvPath = "."
+venv = ".venv"
+reportMissingTypeStubs = "error"
+reportUnnecessaryTypeIgnoreComment = "error"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "--strict-config", "-ra"]
+timeout = 60
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+source = ["intent_harness"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+exclude_also = ["if TYPE_CHECKING:", "raise AssertionError", "assert_never\\("]
+
+[tool.importlinter]
+root_packages = ["intent_harness"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Adapters depend on application, application on domain"
+type = "layers"
+layers = [
+  "intent_harness.contract",
+  "intent_harness.main",
+  "intent_harness.adapters",
+  "intent_harness.application",
+  "intent_harness.domain",
+]
+
+[[tool.importlinter.contracts]]
+name = "The domain is pure: no transport, provider, filesystem, clock, or environment access"
+type = "forbidden"
+source_modules = ["intent_harness.domain"]
+forbidden_modules = ["fastapi", "starlette", "httpx", "uvicorn", "asyncio", "anyio", "os", "pathlib", "time", "random", "uuid", "intent_harness.config"]
+
+[[tool.importlinter.contracts]]
+name = "Application code owns ports, not transports or providers"
+type = "forbidden"
+source_modules = ["intent_harness.application"]
+forbidden_modules = ["fastapi", "starlette", "httpx", "uvicorn", "os", "pathlib", "intent_harness.config"]
+
+[[tool.importlinter.contracts]]
+name = "Only the composition root reads configuration"
+type = "forbidden"
+source_modules = ["intent_harness.adapters"]
+forbidden_modules = ["intent_harness.config"]
+
+[[tool.importlinter.contracts]]
+name = "Adapters do not reach into one another"
+type = "independence"
+modules = ["intent_harness.adapters.http", "intent_harness.adapters.persistence", "intent_harness.adapters.model"]

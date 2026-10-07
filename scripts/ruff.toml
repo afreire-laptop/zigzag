@@ -1,0 +1,14 @@
+# Lint rules for the repository scripts and Claude Code hooks: the API's rules, adjusted for command-line tools.
+extend = "../apps/api/pyproject.toml"
+src = ["."]
+
+[lint]
+# Command-line tools print, and run git, pnpm, node, and codex with fixed argument lists.
+extend-ignore = ["T20", "S603", "S607"]
+
+[lint.per-file-ignores]
+# Paths are relative to the repository root, where `pnpm workflow:check` runs ruff with --config.
+# The tests use the standard library's unittest, so pytest-style rules do not apply.
+"scripts/tests/**" = ["PT", "S"]
+# The smoke check opens only the http://127.0.0.1 URL of the stack it was started against.
+"scripts/smoke_check.py" = ["S310"]

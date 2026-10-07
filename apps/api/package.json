@@ -1,0 +1,19 @@
+{
+  "name": "@intent-harness/api",
+  "private": true,
+  "description": "Python API. Package scripts wrap uv so Turborepo can orchestrate it; uv owns Python dependencies.",
+  "scripts": {
+    "setup": "uv sync --frozen",
+    "dev": "sh scripts/dev.sh",
+    "lint": "uv run --frozen ruff check . && uv run --frozen ruff format --check .",
+    "format": "uv run --frozen ruff format . && uv run --frozen ruff check --fix .",
+    "typecheck": "pyright",
+    "boundaries": "uv run --frozen lint-imports",
+    "test": "uv run --frozen coverage run -m pytest && uv run --frozen coverage json -q && uv run --frozen python scripts/check_coverage.py",
+    "eval": "uv run --frozen python -m evals.run",
+    "generate": "uv run --frozen python -m intent_harness.contract openapi.json"
+  },
+  "devDependencies": {
+    "pyright": "1.1.414"
+  }
+}

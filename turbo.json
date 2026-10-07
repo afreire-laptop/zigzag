@@ -1,0 +1,46 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "agentGuidance": false,
+  "globalDependencies": ["mise.toml", "biome.json"],
+  "globalPassThroughEnv": ["HOME", "TMPDIR", "UV_CACHE_DIR", "PLAYWRIGHT_BROWSERS_PATH", "CI"],
+  "tasks": {
+    "lint": {},
+    "format": {
+      "cache": false
+    },
+    "typecheck": {
+      "dependsOn": ["^generate"]
+    },
+    "boundaries": {},
+    "test": {
+      "dependsOn": ["^generate"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/fixtures/**"],
+      "outputs": ["coverage/**", "coverage.json"]
+    },
+    "build": {
+      "dependsOn": ["^generate"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "e2e": {
+      "cache": false,
+      "dependsOn": ["build"]
+    },
+    "eval": {
+      "cache": false
+    },
+    "@intent-harness/api-client#generate": {
+      "dependsOn": ["^generate"],
+      "inputs": ["openapi-ts.config.ts", "package.json", "$TURBO_ROOT$/apps/api/openapi.json"],
+      "outputs": ["src/generated/**"]
+    },
+    "@intent-harness/api#generate": {
+      "inputs": ["src/**/*.py", "pyproject.toml", "uv.lock", "$TURBO_ROOT$/fixtures/journeys.json"],
+      "outputs": ["openapi.json"]
+    }
+  }
+}

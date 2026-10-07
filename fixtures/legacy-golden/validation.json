@@ -1,0 +1,132 @@
+{
+  "projects": {
+    "ambiguous": "{\"schemaVersion\":1,\"id\":\"v1\",\"title\":\"Help independent restaurants deal with operational incidents.\",\"createdAt\":\"2026-10-05T10:00:00.000Z\",\"updatedAt\":\"2026-10-05T10:00:00.000Z\",\"revision\":1,\"seq\":{\"s\":1,\"i\":3,\"d\":1,\"q\":2,\"a\":1},\"inputs\":[{\"id\":\"s1\",\"kind\":\"brief\",\"text\":\"Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process.\",\"at\":\"2026-10-05T10:00:00.000Z\",\"questionId\":null,\"interpretedBy\":\"fixture\"}],\"intent\":[{\"id\":\"i1\",\"kind\":\"outcome\",\"text\":\"Help independent restaurants deal with operational incidents.\",\"source\":{\"type\":\"quote\",\"inputId\":\"s1\",\"quote\":\"Help independent restaurants deal with operational incidents\"},\"decisionId\":\"d1\"},{\"id\":\"i2\",\"kind\":\"constraint\",\"text\":\"Easy to use.\",\"source\":{\"type\":\"quote\",\"inputId\":\"s1\",\"quote\":\"It should be easy to use\"},\"decisionId\":\"d1\"},{\"id\":\"i3\",\"kind\":\"outcome\",\"text\":\"Owners have visibility.\",\"source\":{\"type\":\"quote\",\"inputId\":\"s1\",\"quote\":\"give owners visibility\"},\"decisionId\":\"d1\"}],\"openItems\":[{\"id\":\"q1\",\"kind\":\"question\",\"text\":\"Which improvement should we investigate first?\",\"basis\":\"Your brief names incidents and owner visibility but not the primary user or the moment that matters most.\",\"effect\":\"This changes whom we speak to and which incident situations we examine.\",\"source\":null,\"options\":[{\"id\":\"q1.1\",\"label\":\"Coordination during service\",\"description\":\"How people respond while an incident is happening.\",\"tradeoff\":\"May introduce work during a busy period.\",\"establishes\":[{\"kind\":\"direction\",\"text\":\"Investigate how incidents are coordinated during service.\"}]},{\"id\":\"q1.2\",\"label\":\"Owner visibility afterwards\",\"description\":\"How owners understand incidents and follow up.\",\"tradeoff\":\"May leave immediate coordination unchanged.\",\"establishes\":[{\"kind\":\"direction\",\"text\":\"Investigate how owners understand incidents and follow up afterwards.\"}]}],\"deferEffect\":\"Investigate both before choosing. This requires a broader discovery effort.\",\"status\":\"open\",\"decisionId\":null,\"proposedBy\":\"fixture\"},{\"id\":\"q2\",\"kind\":\"question\",\"text\":\"Does this need new software, a better process, or both?\",\"basis\":\"Your brief says this is unknown.\",\"effect\":\"Decides whether later work considers building software or changing practice.\",\"source\":{\"inputId\":\"s1\",\"quote\":\"I don't know whether we need new software or a better process\"},\"options\":[],\"deferEffect\":\"Discovery examines current practice without assuming software.\",\"status\":\"open\",\"decisionId\":null,\"proposedBy\":\"fixture\"},{\"id\":\"a1\",\"kind\":\"assumption\",\"text\":\"Independent restaurants currently struggle to handle operational incidents.\",\"basis\":\"Agent inference from the brief; no supporting evidence supplied.\",\"effect\":\"If incidents are already handled well, the effort may not be worthwhile. Early interviews can check this.\",\"source\":null,\"options\":[],\"deferEffect\":null,\"status\":\"open\",\"decisionId\":null,\"proposedBy\":\"fixture\"}],\"focusId\":\"q1\",\"decisions\":[{\"id\":\"d1\",\"at\":\"2026-10-05T10:00:00.000Z\",\"revision\":1,\"inputId\":\"s1\",\"questionId\":null,\"optionId\":null,\"reason\":null,\"changes\":[{\"itemId\":\"i1\",\"kind\":\"outcome\",\"before\":null,\"after\":\"Help independent restaurants deal with operational incidents.\"},{\"itemId\":\"i2\",\"kind\":\"constraint\",\"before\":null,\"after\":\"Easy to use.\"},{\"itemId\":\"i3\",\"kind\":\"outcome\",\"before\":null,\"after\":\"Owners have visibility.\"}],\"statusChanges\":[],\"supersedes\":[],\"action\":\"brief\",\"summary\":\"From your brief: recorded 3 statements in your words.\"}],\"reviews\":[]}",
+    "ambiguous-deferred": "{\"schemaVersion\":1,\"id\":\"v1\",\"title\":\"Help independent restaurants deal with operational incidents.\",\"createdAt\":\"2026-10-05T10:00:00.000Z\",\"updatedAt\":\"2026-10-05T10:01:00.000Z\",\"revision\":2,\"seq\":{\"s\":1,\"i\":3,\"d\":2,\"q\":2,\"a\":1},\"inputs\":[{\"id\":\"s1\",\"kind\":\"brief\",\"text\":\"Help independent restaurants deal with operational incidents. It should be easy to use and give owners visibility. I don't know whether we need new software or a better process.\",\"at\":\"2026-10-05T10:00:00.000Z\",\"questionId\":null,\"interpretedBy\":\"fixture\"}],\"intent\":[{\"id\":\"i1\",\"kind\":\"outcome\",\"text\":\"Help independent restaurants deal with operational incidents.\",\"source\":{\"type\":\"quote\",\"inputId\":\"s1\",\"quote\":\"Help independent restaurants deal with operational incidents\"},\"decisionId\":\"d1\"},{\"id\":\"i2\",\"kind\":\"constraint\",\"text\":\"Easy to use.\",\"source\":{\"type\":\"quote\",\"inputId\":\"s1\",\"quote\":\"It should be easy to use\"},\"decisionId\":\"d1\"},{\"id\":\"i3\",\"kind\":\"outcome\",\"text\":\"Owners have visibility.\",\"source\":{\"type\":\"quote\",\"inputId\":\"s1\",\"quote\":\"give owners visibility\"},\"decisionId\":\"d1\"}],\"openItems\":[{\"id\":\"q1\",\"kind\":\"question\",\"text\":\"Which improvement should we investigate first?\",\"basis\":\"Your brief names incidents and owner visibility but not the primary user or the moment that matters most.\",\"effect\":\"This changes whom we speak to and which incident situations we examine.\",\"source\":null,\"options\":[{\"id\":\"q1.1\",\"label\":\"Coordination during service\",\"description\":\"How people respond while an incident is happening.\",\"tradeoff\":\"May introduce work during a busy period.\",\"establishes\":[{\"kind\":\"direction\",\"text\":\"Investigate how incidents are coordinated during service.\"}]},{\"id\":\"q1.2\",\"label\":\"Owner visibility afterwards\",\"description\":\"How owners understand incidents and follow up.\",\"tradeoff\":\"May leave immediate coordination unchanged.\",\"establishes\":[{\"kind\":\"direction\",\"text\":\"Investigate how owners understand incidents and follow up afterwards.\"}]}],\"deferEffect\":\"Investigate both before choosing. This requires a broader discovery effort.\",\"status\":\"deferred\",\"decisionId\":\"d2\",\"proposedBy\":\"fixture\"},{\"id\":\"q2\",\"kind\":\"question\",\"text\":\"Does this need new software, a better process, or both?\",\"basis\":\"Your brief says this is unknown.\",\"effect\":\"Decides whether later work considers building software or changing practice.\",\"source\":{\"inputId\":\"s1\",\"quote\":\"I don't know whether we need new software or a better process\"},\"options\":[],\"deferEffect\":\"Discovery examines current practice without assuming software.\",\"status\":\"open\",\"decisionId\":null,\"proposedBy\":\"fixture\"},{\"id\":\"a1\",\"kind\":\"assumption\",\"text\":\"Independent restaurants currently struggle to handle operational incidents.\",\"basis\":\"Agent inference from the brief; no supporting evidence supplied.\",\"effect\":\"If incidents are already handled well, the effort may not be worthwhile. Early interviews can check this.\",\"source\":null,\"options\":[],\"deferEffect\":null,\"status\":\"open\",\"decisionId\":null,\"proposedBy\":\"fixture\"}],\"focusId\":null,\"decisions\":[{\"id\":\"d1\",\"at\":\"2026-10-05T10:00:00.000Z\",\"revision\":1,\"inputId\":\"s1\",\"questionId\":null,\"optionId\":null,\"reason\":null,\"changes\":[{\"itemId\":\"i1\",\"kind\":\"outcome\",\"before\":null,\"after\":\"Help independent restaurants deal with operational incidents.\"},{\"itemId\":\"i2\",\"kind\":\"constraint\",\"before\":null,\"after\":\"Easy to use.\"},{\"itemId\":\"i3\",\"kind\":\"outcome\",\"before\":null,\"after\":\"Owners have visibility.\"}],\"statusChanges\":[],\"supersedes\":[],\"action\":\"brief\",\"summary\":\"From your brief: recorded 3 statements in your words.\"},{\"id\":\"d2\",\"at\":\"2026-10-05T10:01:00.000Z\",\"revision\":2,\"inputId\":null,\"questionId\":\"q1\",\"optionId\":null,\"reason\":null,\"changes\":[],\"statusChanges\":[{\"itemId\":\"q1\",\"to\":\"deferred\"}],\"supersedes\":[],\"action\":\"defer\",\"summary\":\"Left open: “Which improvement should we investigate first?”.\"}],\"reviews\":[]}"
+  },
+  "cases": [
+    {
+      "name": "accepts the clear fixture",
+      "raw": "{\"extracted\":[{\"kind\":\"outcome\",\"text\":\"Frontend engineers understand the required changes for one release without searching across documents.\",\"quote\":\"understand the required changes for one component-library release without searching across documents\"},{\"kind\":\"audience\",\"text\":\"Frontend engineers upgrading one component-library release.\",\"quote\":\"Frontend engineers need to understand the required changes for one component-library release\"},{\"kind\":\"direction\",\"text\":\"Explore a static migration guide.\",\"quote\":\"Explore a static migration guide\"},{\"kind\":\"scope\",\"text\":\"Button and Input.\",\"quote\":\"for Button and Input\"},{\"kind\":\"constraint\",\"text\":\"Use the changelog and migration documentation as sources.\",\"quote\":\"It will use our changelog and migration documentation\"},{\"kind\":\"exclusion\",\"text\":\"Automated code changes.\",\"quote\":\"Exclude automated code changes\"},{\"kind\":\"exclusion\",\"text\":\"Application scanning.\",\"quote\":\"application scanning\"},{\"kind\":\"exclusion\",\"text\":\"Analytics.\",\"quote\":\"and analytics\"},{\"kind\":\"nextStep\",\"text\":\"Prepare a design brief, not an implementation.\",\"quote\":\"The next step is a design brief, not implementation\"}],\"resolutions\":[],\"newItems\":[{\"ref\":\"new1\",\"kind\":\"assumption\",\"text\":\"A consolidated guide saves engineers time.\",\"basis\":\"Stated as untested in your brief.\",\"quote\":\"We have not tested whether a consolidated guide saves time\",\"effect\":\"If it does not, the guide may not be worth maintaining. It does not block the design brief.\",\"options\":[],\"deferEffect\":null},{\"ref\":\"new2\",\"kind\":\"needed\",\"text\":\"The release's changelog and migration documentation.\",\"basis\":\"Named in your brief but not supplied.\",\"quote\":\"It will use our changelog and migration documentation\",\"effect\":\"Needed before release-specific guide content can be written. Not needed for the design brief.\",\"options\":[],\"deferEffect\":null}],\"focus\":null}",
+      "context": "brief",
+      "newText": "Frontend engineers need to understand the required changes for one component-library release without searching across documents. Explore a static migration guide for Button and Input. It will use our changelog and migration documentation. Exclude automated code changes, application scanning, and analytics. The next step is a design brief, not implementation. We have not tested whether a consolidated guide saves time.",
+      "project": "none",
+      "result": {
+        "ok": true,
+        "notes": [],
+        "keptNewItems": 2,
+        "focus": null
+      }
+    },
+    {
+      "name": "not JSON",
+      "raw": "Sure! Here is the JSON: {",
+      "context": "brief",
+      "newText": "Frontend engineers need to understand the required changes for one component-library release without searching across documents. Explore a static migration guide for Button and Input. It will use our changelog and migration documentation. Exclude automated code changes, application scanning, and analytics. The next step is a design brief, not implementation. We have not tested whether a consolidated guide saves time.",
+      "project": "none",
+      "result": {
+        "ok": false,
+        "issues": [
+          "The response was not valid JSON."
+        ]
+      }
+    },
+    {
+      "name": "missing fields",
+      "raw": "{\"extracted\":[]}",
+      "context": "brief",
+      "newText": "Frontend engineers need to understand the required changes for one component-library release without searching across documents. Explore a static migration guide for Button and Input. It will use our changelog and migration documentation. Exclude automated code changes, application scanning, and analytics. The next step is a design brief, not implementation. We have not tested whether a consolidated guide saves time.",
+      "project": "none",
+      "result": {
+        "ok": false,
+        "issues": [
+          "resolutions: Invalid input: expected array, received undefined",
+          "newItems: Invalid input: expected array, received undefined",
+          "focus: Invalid input: expected string, received undefined"
+        ]
+      }
+    },
+    {
+      "name": "quote not in text",
+      "raw": "{\"extracted\":[{\"kind\":\"outcome\",\"text\":\"Frontend engineers understand the required changes for one release without searching across documents.\",\"quote\":\"understand the required changes for one component-library release without searching across documents\"},{\"kind\":\"audience\",\"text\":\"Frontend engineers upgrading one component-library release.\",\"quote\":\"Frontend engineers need to understand the required changes for one component-library release\"},{\"kind\":\"direction\",\"text\":\"Explore a static migration guide.\",\"quote\":\"Explore a static migration guide\"},{\"kind\":\"scope\",\"text\":\"Button and Input.\",\"quote\":\"for Button and Input\"},{\"kind\":\"constraint\",\"text\":\"Use the changelog and migration documentation as sources.\",\"quote\":\"It will use our changelog and migration documentation\"},{\"kind\":\"exclusion\",\"text\":\"Automated code changes.\",\"quote\":\"Exclude automated code changes\"},{\"kind\":\"exclusion\",\"text\":\"Application scanning.\",\"quote\":\"application scanning\"},{\"kind\":\"exclusion\",\"text\":\"Analytics.\",\"quote\":\"and analytics\"},{\"kind\":\"nextStep\",\"text\":\"Prepare a design brief, not an implementation.\",\"quote\":\"The next step is a design brief, not implementation\"},{\"kind\":\"audience\",\"text\":\"Senior engineers.\",\"quote\":\"senior engineers at large companies\"}],\"resolutions\":[],\"newItems\":[{\"ref\":\"new1\",\"kind\":\"assumption\",\"text\":\"A consolidated guide saves engineers time.\",\"basis\":\"Stated as untested in your brief.\",\"quote\":\"We have not tested whether a consolidated guide saves time\",\"effect\":\"If it does not, the guide may not be worth maintaining. It does not block the design brief.\",\"options\":[],\"deferEffect\":null},{\"ref\":\"new2\",\"kind\":\"needed\",\"text\":\"The release's changelog and migration documentation.\",\"basis\":\"Named in your brief but not supplied.\",\"quote\":\"It will use our changelog and migration documentation\",\"effect\":\"Needed before release-specific guide content can be written. Not needed for the design brief.\",\"options\":[],\"deferEffect\":null}],\"focus\":null}",
+      "context": "brief",
+      "newText": "Frontend engineers need to understand the required changes for one component-library release without searching across documents. Explore a static migration guide for Button and Input. It will use our changelog and migration documentation. Exclude automated code changes, application scanning, and analytics. The next step is a design brief, not implementation. We have not tested whether a consolidated guide saves time.",
+      "project": "none",
+      "result": {
+        "ok": false,
+        "issues": [
+          "Quoted wording “senior engineers at large companies” does not appear in your text."
+        ]
+      }
+    },
+    {
+      "name": "extraction during reassessment",
+      "raw": "{\"extracted\":[{\"kind\":\"audience\",\"text\":\"Owners.\",\"quote\":\"owners\"}],\"resolutions\":[{\"questionId\":\"q1\",\"status\":\"answered\",\"quote\":\"owners\"}],\"newItems\":[],\"focus\":null}",
+      "context": "reassess",
+      "newText": null,
+      "project": "ambiguous",
+      "result": {
+        "ok": false,
+        "issues": [
+          "Statements were extracted without any new user text.",
+          "Questions were resolved without any new user text.",
+          "Quoted wording “owners” does not appear in your text.",
+          "Resolution wording “owners” does not appear in your reply."
+        ]
+      }
+    },
+    {
+      "name": "unknown question",
+      "raw": "{\"extracted\":[],\"resolutions\":[{\"questionId\":\"q999\",\"status\":\"answered\",\"quote\":\"yes\"}],\"newItems\":[],\"focus\":null}",
+      "context": "reply",
+      "newText": "yes",
+      "project": "ambiguous",
+      "result": {
+        "ok": false,
+        "issues": [
+          "Resolution refers to unknown question q999."
+        ]
+      }
+    },
+    {
+      "name": "re-ask deferred",
+      "raw": "{\"extracted\":[],\"resolutions\":[],\"newItems\":[],\"focus\":\"q1\"}",
+      "context": "reassess",
+      "newText": null,
+      "project": "ambiguous-deferred",
+      "result": {
+        "ok": false,
+        "issues": [
+          "Focus q1 is not an open question; deferred and answered questions are not re-asked."
+        ]
+      }
+    },
+    {
+      "name": "options on assumption",
+      "raw": "{\"extracted\":[{\"kind\":\"outcome\",\"text\":\"Frontend engineers understand the required changes for one release without searching across documents.\",\"quote\":\"understand the required changes for one component-library release without searching across documents\"},{\"kind\":\"audience\",\"text\":\"Frontend engineers upgrading one component-library release.\",\"quote\":\"Frontend engineers need to understand the required changes for one component-library release\"},{\"kind\":\"direction\",\"text\":\"Explore a static migration guide.\",\"quote\":\"Explore a static migration guide\"},{\"kind\":\"scope\",\"text\":\"Button and Input.\",\"quote\":\"for Button and Input\"},{\"kind\":\"constraint\",\"text\":\"Use the changelog and migration documentation as sources.\",\"quote\":\"It will use our changelog and migration documentation\"},{\"kind\":\"exclusion\",\"text\":\"Automated code changes.\",\"quote\":\"Exclude automated code changes\"},{\"kind\":\"exclusion\",\"text\":\"Application scanning.\",\"quote\":\"application scanning\"},{\"kind\":\"exclusion\",\"text\":\"Analytics.\",\"quote\":\"and analytics\"},{\"kind\":\"nextStep\",\"text\":\"Prepare a design brief, not an implementation.\",\"quote\":\"The next step is a design brief, not implementation\"}],\"resolutions\":[],\"newItems\":[{\"ref\":\"new1\",\"kind\":\"assumption\",\"text\":\"A consolidated guide saves engineers time.\",\"basis\":\"Stated as untested in your brief.\",\"quote\":\"We have not tested whether a consolidated guide saves time\",\"effect\":\"If it does not, the guide may not be worth maintaining. It does not block the design brief.\",\"options\":[{\"label\":\"Yes\",\"description\":\"d\",\"tradeoff\":\"t\",\"establishes\":[{\"kind\":\"scope\",\"text\":\"x\"}]}],\"deferEffect\":null},{\"ref\":\"new2\",\"kind\":\"needed\",\"text\":\"The release's changelog and migration documentation.\",\"basis\":\"Named in your brief but not supplied.\",\"quote\":\"It will use our changelog and migration documentation\",\"effect\":\"Needed before release-specific guide content can be written. Not needed for the design brief.\",\"options\":[],\"deferEffect\":null}],\"focus\":null}",
+      "context": "brief",
+      "newText": "Frontend engineers need to understand the required changes for one component-library release without searching across documents. Explore a static migration guide for Button and Input. It will use our changelog and migration documentation. Exclude automated code changes, application scanning, and analytics. The next step is a design brief, not implementation. We have not tested whether a consolidated guide saves time.",
+      "project": "none",
+      "result": {
+        "ok": false,
+        "issues": [
+          "Only questions can have options (new1)."
+        ]
+      }
+    },
+    {
+      "name": "repeated item skipped",
+      "raw": "{\"extracted\":[],\"resolutions\":[],\"newItems\":[{\"ref\":\"new1\",\"kind\":\"question\",\"text\":\"Does this need new software, a better process, or both?\",\"basis\":\"Your brief says this is unknown.\",\"quote\":\"I don't know whether we need new software or a better process\",\"effect\":\"Decides whether later work considers building software or changing practice.\",\"options\":[],\"deferEffect\":\"Discovery examines current practice without assuming software.\"}],\"focus\":null}",
+      "context": "reassess",
+      "newText": null,
+      "project": "ambiguous",
+      "result": {
+        "ok": true,
+        "notes": [
+          "Skipped a repeated open item: “Does this need new software, a better process, or both?”."
+        ],
+        "keptNewItems": 0,
+        "focus": null
+      }
+    }
+  ]
+}

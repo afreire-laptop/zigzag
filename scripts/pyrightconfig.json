@@ -1,0 +1,7 @@
+{
+  "include": [".", "../.claude/hooks"],
+  "exclude": ["smoke_check.py"],
+  "extraPaths": [".", "../.claude/hooks"],
+  "typeCheckingMode": "strict",
+  "pythonVersion": "3.14"
+}
