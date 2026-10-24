@@ -1,8 +1,10 @@
-# Handoff export format: `intent-harness.handoff/v0`
+# Handoff export format: `zigzag.handoff/v0`
 
-**Status:** Current · **Implemented in:** [domain/handoff.py](../../apps/api/src/intent_harness/domain/handoff.py), which is authoritative if this page disagrees.
+**Status:** Current · **Implemented in:** [domain/handoff.py](../../apps/api/src/zigzag/domain/handoff.py), which is authoritative if this page disagrees.
 
 Each saved revision has one handoff object. The API renders both the Markdown and the JSON export from it, so the two cannot disagree. A reviewed revision keeps fixed copies of both, exactly as they were at review time.
+
+Before the project was renamed to zigzag, the identifier was `intent-harness.handoff/v0`, with the same structure. Copies reviewed before the rename keep that identifier, because a reviewed copy never changes.
 
 ## JSON
 

@@ -20,14 +20,14 @@ class CheckDocsTest(unittest.TestCase):
                 "docs/README.md": README,
                 "docs/templates/adr.md": TEMPLATE,
                 "docs/product/tenet.md": "# Tenet\n\n**Status:** Current\n\nSee [the template](../templates/adr.md).\n",
-                ".agents/skills/ih-demo/SKILL.md": SKILL.format(name="ih-demo"),
+                ".agents/skills/zz-demo/SKILL.md": SKILL.format(name="zz-demo"),
                 ".claude/agents/code-reviewer.md": (
                     "---\nname: code-reviewer\ndescription: Reviews.\ntools: Read, Grep, Glob\nmodel: sonnet\n---\n"
                 ),
             }
         )
         (self.repo.root / ".claude" / "skills").mkdir(parents=True)
-        os.symlink("../../.agents/skills/ih-demo", self.repo.root / ".claude" / "skills" / "ih-demo")
+        os.symlink("../../.agents/skills/zz-demo", self.repo.root / ".claude" / "skills" / "zz-demo")
 
     def tearDown(self) -> None:
         self.repo.close()
@@ -90,24 +90,24 @@ class CheckDocsTest(unittest.TestCase):
         self.assertIn("docs/templates/spec.md: not listed in docs/README.md", self.problems())
 
     def test_a_skill_without_a_claude_link_is_reported(self) -> None:
-        self.repo.write({".agents/skills/ih-other/SKILL.md": SKILL.format(name="ih-other")})
+        self.repo.write({".agents/skills/zz-other/SKILL.md": SKILL.format(name="zz-other")})
         self.assertIn(
-            ".claude/skills/ih-other: missing; it must be a symlink to ../../.agents/skills/ih-other", self.problems()
+            ".claude/skills/zz-other: missing; it must be a symlink to ../../.agents/skills/zz-other", self.problems()
         )
 
     def test_an_absolute_skill_link_is_reported(self) -> None:
-        link = self.repo.root / ".claude" / "skills" / "ih-demo"
+        link = self.repo.root / ".claude" / "skills" / "zz-demo"
         link.unlink()
-        os.symlink(self.repo.root / ".agents" / "skills" / "ih-demo", link)
+        os.symlink(self.repo.root / ".agents" / "skills" / "zz-demo", link)
         self.assertTrue(any("is absolute" in p for p in self.problems()))
 
     def test_a_skill_name_must_match_its_directory(self) -> None:
-        self.repo.write({".agents/skills/ih-demo/SKILL.md": SKILL.format(name="demo")})
-        self.assertIn(".agents/skills/ih-demo/SKILL.md: frontmatter name must be 'ih-demo'", self.problems())
+        self.repo.write({".agents/skills/zz-demo/SKILL.md": SKILL.format(name="demo")})
+        self.assertIn(".agents/skills/zz-demo/SKILL.md: frontmatter name must be 'zz-demo'", self.problems())
 
     def test_a_machine_path_in_a_skill_is_reported(self) -> None:
-        self.repo.write({".agents/skills/ih-demo/notes.md": "Run /Users/someone/bin/tool\n"})
-        self.assertIn(".agents/skills/ih-demo/notes.md:1: absolute machine path", self.problems())
+        self.repo.write({".agents/skills/zz-demo/notes.md": "Run /Users/someone/bin/tool\n"})
+        self.assertIn(".agents/skills/zz-demo/notes.md:1: absolute machine path", self.problems())
 
     def test_a_reviewer_with_write_tools_is_reported(self) -> None:
         self.repo.write(

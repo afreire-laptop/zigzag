@@ -5,10 +5,10 @@ import json
 
 import pytest
 
-from intent_harness.domain.model import IntentKind
-from intent_harness.domain.proposal import ProposalContext, Valid, validate_proposal
-from intent_harness.domain.text import hedge_around
 from tests.support import AMBIGUOUS, FOCUS_QUESTION, project_from, question
+from zigzag.domain.model import IntentKind
+from zigzag.domain.proposal import ProposalContext, Valid, validate_proposal
+from zigzag.domain.text import hedge_around
 
 
 def extract(text: str, kind: IntentKind, quote: str) -> Valid:

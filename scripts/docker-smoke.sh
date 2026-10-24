@@ -8,8 +8,8 @@
 set -eu
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 port="${SMOKE_PORT:-18080}"
-project="intent-harness-smoke-$$"
-work="$(mktemp -d "${TMPDIR:-/tmp}/intent-harness-smoke.XXXXXX")"
+project="zigzag-smoke-$$"
+work="$(mktemp -d "${TMPDIR:-/tmp}/zigzag-smoke.XXXXXX")"
 base="http://127.0.0.1:$port"
 
 cleanup() {
@@ -24,7 +24,7 @@ trap cleanup EXIT INT TERM
 git -C "$repo" worktree add --detach "$work/tree" HEAD >/dev/null
 cd "$work/tree"
 cp .env.example .env
-export INTENT_WEB_PORT="$port"
+export ZIGZAG_WEB_PORT="$port"
 docker compose -p "$project" up --build --detach --wait --wait-timeout 300
 
 echo "== checks through $base"

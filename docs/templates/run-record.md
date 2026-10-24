@@ -4,7 +4,7 @@
 
 <One or two sentences on what the change did, linking its spec, plan, or ADR.>
 
-<!-- Generate this record with `python3 scripts/run_record.py`; see the ih-pre-pr skill. Write one by hand only for a
+<!-- Generate this record with `python3 scripts/run_record.py`; see the zz-pre-pr skill. Write one by hand only for a
 run the script cannot read, in this format. A record names no local path, session or thread id, or cost, and quotes
 no reviewer output: `pnpm check` rejects the first three. -->
 

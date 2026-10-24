@@ -6,13 +6,13 @@ from pathlib import Path
 
 import pytest
 
-from intent_harness.adapters.model.fixture import FIXTURE_LABEL, FixtureAssessor, load_fixtures
-from intent_harness.application.assessment import render_user_message
-from intent_harness.application.ports import AssessRequest, CallAttempt, ModelCallError
-from intent_harness.contract import main as export_contract
-from intent_harness.contract import openapi_document
-from intent_harness.main import create_app
 from tests.support import AMBIGUOUS, CLEAR, FIXTURES, FOCUS_QUESTION, project_from, question, text
+from zigzag.adapters.model.fixture import FIXTURE_LABEL, FixtureAssessor, load_fixtures
+from zigzag.application.assessment import render_user_message
+from zigzag.application.ports import AssessRequest, CallAttempt, ModelCallError
+from zigzag.contract import main as export_contract
+from zigzag.contract import openapi_document
+from zigzag.main import create_app
 
 pytestmark = pytest.mark.anyio
 
@@ -60,24 +60,24 @@ def test_prompt_messages_carry_state_and_the_new_text() -> None:
 
 def test_invalid_configuration_exits_with_status_2() -> None:
     with pytest.raises(SystemExit) as stopped:
-        create_app({"INTENT_MODEL_MODE": "fixtur"})
+        create_app({"ZIGZAG_MODEL_MODE": "fixtur"})
     assert stopped.value.code == 2
 
 
 def test_live_mode_builds_without_calling_out(tmp_path: Path) -> None:
     app = create_app(
         {
-            "INTENT_MODEL_MODE": "live",
-            "INTENT_OPENROUTER_API_KEY": "sk-or-test",
-            "INTENT_MODEL": "anthropic/claude-opus-5.5",
-            "INTENT_DATA_DIR": str(tmp_path),
+            "ZIGZAG_MODEL_MODE": "live",
+            "ZIGZAG_OPENROUTER_API_KEY": "sk-or-test",
+            "ZIGZAG_MODEL": "anthropic/claude-opus-5.5",
+            "ZIGZAG_DATA_DIR": str(tmp_path),
         }
     )
-    assert app.title == "Intent Harness API"
+    assert app.title == "zigzag API"
     fixture_app = create_app(
-        {"INTENT_FIXTURES_PATH": str(FIXTURES / "journeys.json"), "INTENT_DATA_DIR": str(tmp_path)}
+        {"ZIGZAG_FIXTURES_PATH": str(FIXTURES / "journeys.json"), "ZIGZAG_DATA_DIR": str(tmp_path)}
     )
-    assert fixture_app.title == "Intent Harness API"
+    assert fixture_app.title == "zigzag API"
 
 
 def test_the_committed_contract_matches_the_code(tmp_path: Path) -> None:

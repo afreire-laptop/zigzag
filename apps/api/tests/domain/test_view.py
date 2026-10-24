@@ -2,18 +2,6 @@
 
 import pytest
 
-from intent_harness.domain.model import Project
-from intent_harness.domain.proposal import ProposalContext
-from intent_harness.domain.transitions import (
-    Rejected,
-    apply_user_text,
-    defer_question,
-    edit_statement,
-    mark_reviewed,
-    rely_on_assumption,
-    select_option,
-)
-from intent_harness.domain.view import handoff_view, project_view
 from tests.support import (
     AMBIGUOUS,
     CLEAR,
@@ -27,6 +15,18 @@ from tests.support import (
     text,
     validated,
 )
+from zigzag.domain.model import Project
+from zigzag.domain.proposal import ProposalContext
+from zigzag.domain.transitions import (
+    Rejected,
+    apply_user_text,
+    defer_question,
+    edit_statement,
+    mark_reviewed,
+    rely_on_assumption,
+    select_option,
+)
+from zigzag.domain.view import handoff_view, project_view
 
 
 def project(outcome: Project | Rejected) -> Project:

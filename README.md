@@ -1,6 +1,6 @@
-# intent-harness
+# zigzag
 
-Intent Harness turns an ambiguous brief into explicit human choices and a reviewed handoff. It keeps assumptions and unresolved questions visible. See [docs/product/tenet.md](docs/product/tenet.md) and [docs/product/journeys.md](docs/product/journeys.md). [docs/README.md](docs/README.md) maps the rest of the documentation.
+zigzag turns an ambiguous brief into explicit human choices and a reviewed handoff. It keeps assumptions and unresolved questions visible. See [docs/product/tenet.md](docs/product/tenet.md) and [docs/product/journeys.md](docs/product/journeys.md). [docs/README.md](docs/README.md) maps the rest of the documentation.
 
 This is a local, unauthenticated proof of concept. It has two parts:
 
@@ -22,16 +22,16 @@ If you already have an `.env`, keep it and edit it in place. See [Upgrading an e
 
 Open http://127.0.0.1:8080. The app starts in **fixture mode**, which serves canned journey responses for the fixture texts and labels them as fixtures everywhere. Other texts are refused in this mode.
 
-Projects persist in the `intent-data` Docker volume across restarts. `docker compose down -v` deletes them. The API is reachable only through the web container, and the web port is bound to `127.0.0.1` because there is no authentication.
+Projects persist in the `zigzag_data` Docker volume across restarts. `docker compose down -v` deletes them. The API is reachable only through the web container, and the web port is bound to `127.0.0.1` because there is no authentication.
 
 ### Live mode
 
 Set these three values in `.env`, then run `docker compose up` again:
 
 ```sh
-INTENT_MODEL_MODE=live
-INTENT_OPENROUTER_API_KEY=...       # an OpenRouter key; it stays on the server
-INTENT_MODEL=provider/model-name    # an explicit OpenRouter slug for a model with structured outputs
+ZIGZAG_MODEL_MODE=live
+ZIGZAG_OPENROUTER_API_KEY=...       # an OpenRouter key; it stays on the server
+ZIGZAG_MODEL=provider/model-name    # an explicit OpenRouter slug for a model with structured outputs
 ```
 
 - Every model reading spends credit on your OpenRouter account.
@@ -41,8 +41,24 @@ INTENT_MODEL=provider/model-name    # an explicit OpenRouter slug for a model wi
   3. then combinations, for example live mode without a key or model.
 
   Each stage lists every problem it finds, but a later stage runs only after the earlier ones pass.
-- Only `INTENT_*` variables are read. Shell variables such as `OPENROUTER_API_KEY`, `OPENAI_BASE_URL`, and `ANTHROPIC_*` are ignored.
+- Only `ZIGZAG_*` variables are read. Shell variables such as `OPENROUTER_API_KEY`, `OPENAI_BASE_URL`, and `ANTHROPIC_*` are ignored.
 - Idempotent model starts are [specified](docs/specs/idempotent-model-starts.md) but not built yet. Until then, a lost response or a resubmitted brief can start a second paid call. Implement them before regular live use.
+
+### Upgrading from intent-harness
+
+The project was renamed from intent-harness to zigzag. An existing checkout needs two changes:
+
+1. In `.env`, rename every `INTENT_` variable to `ZIGZAG_`, for example `INTENT_MODEL` to `ZIGZAG_MODEL`. Startup names every leftover `INTENT_` variable with its replacement.
+2. Compose now keeps projects in the `zigzag_data` volume. To keep the projects in the old `intent-harness_intent-data` volume, copy them before the first start:
+
+   ```sh
+   docker compose -p intent-harness down    # stops the old stack and keeps its volume
+   docker compose up --no-start --build     # creates the zigzag_data volume
+   docker run --rm -v intent-harness_intent-data:/from:ro -v zigzag_data:/to alpine:3.20 cp -a /from/. /to/
+   docker compose up
+   ```
+
+   The old volume stays until you delete it with `docker volume rm intent-harness_intent-data`.
 
 ### Upgrading an existing `.env`
 
@@ -50,11 +66,11 @@ An `.env` written for the earlier Express version does not start the API. Edit i
 
 | Old line | Change |
 | --- | --- |
-| `ANTHROPIC_API_KEY=…` | Not read, and startup does not mention it. Live mode now goes through OpenRouter: add `INTENT_OPENROUTER_API_KEY`, and delete the Anthropic key if nothing else uses it. |
-| `INTENT_EFFORT=…` | Retired, and startup names it. Rename it to `INTENT_REASONING_EFFORT`, set to `low`, `medium`, `high`, or empty. `xhigh` and `max` are not accepted. |
-| `INTENT_MAX_TOKENS=…` | Retired, and startup names it. Rename it to `INTENT_MAX_OUTPUT_TOKENS`. |
-| `INTENT_MODEL=<Anthropic model id>` | Must now be an OpenRouter slug, `provider/model-name`, or empty. Startup checks it even in fixture mode, but only after the retired names are fixed, and it reports only a pattern mismatch. |
-| `INTENT_MODEL_MODE=…` | Unchanged: `fixture` or `live`. |
+| `ANTHROPIC_API_KEY=…` | Not read, and startup does not mention it. Live mode now goes through OpenRouter: add `ZIGZAG_OPENROUTER_API_KEY`, and delete the Anthropic key if nothing else uses it. |
+| `INTENT_EFFORT=…` | Retired, and startup names it. Rename it to `ZIGZAG_REASONING_EFFORT`, set to `low`, `medium`, `high`, or empty. `xhigh` and `max` are not accepted. |
+| `INTENT_MAX_TOKENS=…` | Retired, and startup names it. Rename it to `ZIGZAG_MAX_OUTPUT_TOKENS`. |
+| `INTENT_MODEL=<Anthropic model id>` | Rename it to `ZIGZAG_MODEL`, set to an OpenRouter slug, `provider/model-name`, or empty. Startup checks it even in fixture mode, but only after the names are fixed, and it reports only a pattern mismatch. |
+| `INTENT_MODEL_MODE=…` | Rename it to `ZIGZAG_MODEL_MODE`. The values are unchanged: `fixture` or `live`. |
 
 Then compare your file with `.env.example` for new optional settings.
 
@@ -112,7 +128,7 @@ The handoff export format is described in [docs/reference/handoff-format.md](doc
 
 `pnpm eval --budget-usd 2 --max-calls 40 --repeats 2` runs the journey variations and negative controls against the configured live model. It writes raw results and a summary to `observations/`, which is git-ignored.
 
-It reads `.env`, as `pnpm dev` does, except that variables already set in the shell take precedence. To evaluate another model without editing `.env`, run `INTENT_MODEL=provider/other-model pnpm eval …`. A variable left exported from an earlier session also wins over `.env`, and the summary's heading names the model it requested.
+It reads `.env`, as `pnpm dev` does, except that variables already set in the shell take precedence. To evaluate another model without editing `.env`, run `ZIGZAG_MODEL=provider/other-model pnpm eval …`. A variable left exported from an earlier session also wins over `.env`, and the summary's heading names the model it requested.
 
 The run refuses to start without a budget. It counts every request it submits, including automatic retries, and stops if any request's cost is unknown, including a request that timed out after it was sent. Judge each scenario and record the result in [docs/evaluations/live-model-observations.md](docs/evaluations/live-model-observations.md), following [the protocol](docs/evaluations/live-model-protocol.md).
 

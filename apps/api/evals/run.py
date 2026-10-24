@@ -4,7 +4,7 @@
 
 `pnpm eval` runs this module through scripts/eval.sh, which also reads the repository's .env; variables already set
 in the shell take precedence. Run directly with `uv run python -m evals.run`, it sees only the shell's variables.
-It needs INTENT_MODEL_MODE=live with INTENT_OPENROUTER_API_KEY and INTENT_MODEL, and refuses to start without a
+It needs ZIGZAG_MODEL_MODE=live with ZIGZAG_OPENROUTER_API_KEY and ZIGZAG_MODEL, and refuses to start without a
 spending budget. Every request submitted counts against the budget, including automatic retries; a request whose
 cost is unknown, such as one that timed out after it was sent, stops the run. Every case runs through the same
 validation and transitions as the app. Results go to observations/ (git-ignored): raw responses, schema validity,
@@ -24,13 +24,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from evals.cases import CASES, Case, base_state
-from intent_harness.adapters.model.openrouter import OpenRouterClient
-from intent_harness.application.assessment import PROMPT_VERSION, LiveAssessor
-from intent_harness.application.ports import Assessor, AssessRequest, CallAttempt, ModelCallError, known_cost
-from intent_harness.config import ConfigError, load_config
-from intent_harness.domain.model import Project
-from intent_harness.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
-from intent_harness.domain.transitions import apply_reassessment, apply_user_text, create_project
+from zigzag.adapters.model.openrouter import OpenRouterClient
+from zigzag.application.assessment import PROMPT_VERSION, LiveAssessor
+from zigzag.application.ports import Assessor, AssessRequest, CallAttempt, ModelCallError, known_cost
+from zigzag.config import ConfigError, load_config
+from zigzag.domain.model import Project
+from zigzag.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
+from zigzag.domain.transitions import apply_reassessment, apply_user_text, create_project
 
 AT = "2026-10-06T12:00:00.000Z"
 
@@ -222,7 +222,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
     if config.model_mode != "live" or config.openrouter_api_key is None or config.model is None:
         print(
-            "Live evaluation needs INTENT_MODEL_MODE=live, INTENT_OPENROUTER_API_KEY, and INTENT_MODEL. "
+            "Live evaluation needs ZIGZAG_MODEL_MODE=live, ZIGZAG_OPENROUTER_API_KEY, and ZIGZAG_MODEL. "
             "Live verification not run.",
             file=sys.stderr,
         )

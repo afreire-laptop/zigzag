@@ -7,4 +7,4 @@ python3 scripts/check_docs.py
 python3 -W error -m unittest discover -s scripts/tests -t scripts
 uv run --frozen --project apps/api ruff check --config scripts/ruff.toml scripts .claude/hooks
 uv run --frozen --project apps/api ruff format --check --config scripts/ruff.toml scripts .claude/hooks
-pnpm --filter @intent-harness/api exec pyright -p ../../scripts/pyrightconfig.json
+pnpm --filter @zigzag/api exec pyright -p ../../scripts/pyrightconfig.json

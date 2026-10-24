@@ -26,7 +26,7 @@ When two sources disagree, the first one listed for the topic wins. Fix the othe
 - **Agent and contributor rules:** [AGENTS.md](../AGENTS.md). `CLAUDE.md` only imports it.
 - **Running and configuring the app:** [README.md](../README.md).
 - **The HTTP contract:** `apps/api/openapi.json`, generated from the Pydantic models. Documents link to it and never restate it.
-- **The handoff format:** `apps/api/src/intent_harness/domain/handoff.py`, then [reference/handoff-format.md](reference/handoff-format.md).
+- **The handoff format:** `apps/api/src/zigzag/domain/handoff.py`, then [reference/handoff-format.md](reference/handoff-format.md).
 - **Architecture:** the accepted ADRs in `decisions/`. A later ADR supersedes an earlier one explicitly.
 - **The gates:** the scripts in [package.json](../package.json) and `scripts/`. CI and the agent skills call the same scripts. A gate that exists only in prose is not a gate.
 
@@ -45,7 +45,7 @@ Every document except this README and the templates starts with a metadata line 
 
 ## Choosing a document
 
-Write the smallest document that the work needs. Decide during intake (`ih-intake`):
+Write the smallest document that the work needs. Decide during intake (`zz-intake`):
 
 - **A small bug fix** needs no new document. The failing regression test and the commit message carry it. If the bug came from a review, it gets a findings-register entry.
 - **A behavior change inside existing requirements** needs a spec only if it changes a contract, stored data, or more than one module. Otherwise, the acceptance criteria go in the plan or the commit.

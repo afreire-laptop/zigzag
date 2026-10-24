@@ -78,7 +78,7 @@ The provider schema is derived from the Pydantic proposal model. Keywords that p
 
 **Retries and accounting.** Added 2026-10-06, after an adversarial review found that a timed-out request could be paid for twice. A request is repeated automatically only when no model can have processed it. OpenRouter sends `200 OK` "as soon as the provider accepts the request", and reports every failure after that point inside the response body ([Errors and debugging](https://openrouter.ai/docs/api_reference/errors-and-debugging), "Mid-stream errors"). An error status therefore means that no provider accepted the request.
 
-- **Repeated automatically**, up to `INTENT_MAX_ATTEMPTS` attempts in total:
+- **Repeated automatically**, up to `ZIGZAG_MAX_ATTEMPTS` attempts in total:
   - failures before the request was sent: `ConnectError`, `ConnectTimeout`, and `PoolTimeout`;
   - `429`, from an OpenRouter platform limit or a provider's rate limit. The docs say to retry with backoff and to honour `Retry-After` ([Limits](https://openrouter.ai/docs/api_reference/limits), "Handling 429 errors");
   - `503`, "There is no available model provider that meets your routing requirements" (errors page).

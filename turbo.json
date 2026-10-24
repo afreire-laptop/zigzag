@@ -33,12 +33,12 @@
     "eval": {
       "cache": false
     },
-    "@intent-harness/api-client#generate": {
+    "@zigzag/api-client#generate": {
       "dependsOn": ["^generate"],
       "inputs": ["openapi-ts.config.ts", "package.json", "$TURBO_ROOT$/apps/api/openapi.json"],
       "outputs": ["src/generated/**"]
     },
-    "@intent-harness/api#generate": {
+    "@zigzag/api#generate": {
       "inputs": ["src/**/*.py", "pyproject.toml", "uv.lock", "$TURBO_ROOT$/fixtures/journeys.json"],
       "outputs": ["openapi.json"]
     }

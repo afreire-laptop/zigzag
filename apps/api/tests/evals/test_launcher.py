@@ -27,7 +27,7 @@ def launch(root: Path, *args: str) -> list[str]:
 
 
 def test_the_launcher_reads_the_repository_env_file(tmp_path: Path) -> None:
-    (tmp_path / ".env").write_text("INTENT_MODEL_MODE=live\n")
+    (tmp_path / ".env").write_text("ZIGZAG_MODEL_MODE=live\n")
     assert launch(tmp_path, *ARGS) == ["run", "--frozen", "--env-file", "../../.env", *RUNNER, *ARGS]
 
 
@@ -36,13 +36,13 @@ def test_without_an_env_file_the_launcher_uses_the_shell_environment(tmp_path: P
 
 
 def test_a_variable_set_in_the_shell_overrides_the_env_file(tmp_path: Path) -> None:
-    (tmp_path / ".env").write_text("INTENT_MODEL=from/env-file\nINTENT_REASONING_EFFORT=medium\n")
+    (tmp_path / ".env").write_text("ZIGZAG_MODEL=from/env-file\nZIGZAG_REASONING_EFFORT=medium\n")
     uv = shutil.which("uv")
     assert uv is not None, "uv runs the evaluation, so it must be on PATH"
-    for name, expected in (("INTENT_MODEL", "from/shell"), ("INTENT_REASONING_EFFORT", "medium")):
+    for name, expected in (("ZIGZAG_MODEL", "from/shell"), ("ZIGZAG_REASONING_EFFORT", "medium")):
         shown = subprocess.run(
             [uv, "run", "--no-project", "--env-file", str(tmp_path / ".env"), "printenv", name],
-            env={**os.environ, "INTENT_MODEL": "from/shell"},
+            env={**os.environ, "ZIGZAG_MODEL": "from/shell"},
             capture_output=True,
             text=True,
             check=True,

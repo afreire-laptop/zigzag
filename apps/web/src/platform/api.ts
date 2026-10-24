@@ -24,7 +24,7 @@ import {
   type SelectCommand,
   type StatusView,
   zProblem,
-} from "@intent-harness/api-client";
+} from "@zigzag/api-client";
 
 export type Failure = {
   message: string;

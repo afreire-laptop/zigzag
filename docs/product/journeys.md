@@ -1,7 +1,7 @@
-# Intent Harness — Three Journeys and a Minimal Contract
+# zigzag — Three Journeys and a Minimal Contract
 
 **Date:** 5 October 2026  
-**Basis:** The revised Intent Harness Tenet v0.1, with six tenets.  
+**Basis:** The revised zigzag Tenet v0.1, with six tenets.  
 **Status:** Proposed behavior, ready for a small prototype.
 
 These are fictional walkthroughs. All briefs, replies, interview notes, and approvals below are fixture data. They make no decisions about any existing project. Expected behavior is specified here; no implementation or user study has yet verified it.

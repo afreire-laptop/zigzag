@@ -7,5 +7,5 @@ if [ -f ../../.env ]; then
   . ../../.env
   set +a
 fi
-exec uv run --frozen uvicorn intent_harness.main:create_app --factory --reload --reload-dir src \
+exec uv run --frozen uvicorn zigzag.main:create_app --factory --reload --reload-dir src \
   --host 127.0.0.1 --port 8000

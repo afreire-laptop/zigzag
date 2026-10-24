@@ -162,7 +162,7 @@ describe("useWorkspace", () => {
     await expect(hook.result.current.reply("My reply.", "q1")).resolves.toBe(false);
     await waitFor(() => expect(hook.result.current.problem?.message).toBe("The model is already working on this."));
     expect(s.opened).toHaveLength(0);
-    expect(sessionStorage.getItem("intent-harness:started-operations")).toBeNull();
+    expect(sessionStorage.getItem("zigzag:started-operations")).toBeNull();
   });
 
   it("saves a choice, then reassesses; a failed reassessment keeps the saved choice", async () => {
@@ -285,7 +285,7 @@ describe("useWorkspace", () => {
     api.create.mockResolvedValue(operation({ id: "op9" }));
     void hook.result.current.createBrief("Brief.");
     await waitFor(() => expect(s.opened.length).toBe(1));
-    expect(JSON.parse(sessionStorage.getItem("intent-harness:started-operations") ?? "[]")).toEqual(["op9"]);
+    expect(JSON.parse(sessionStorage.getItem("zigzag:started-operations") ?? "[]")).toEqual(["op9"]);
     hook.unmount(); // the tab reloads while the brief is being read
 
     const after = setup({ current: project({ id: "p2" }), active: [operation({ id: "op9", status: "running" })] });
@@ -295,7 +295,7 @@ describe("useWorkspace", () => {
       operation({ id: "op9", version: 3, status: "succeeded", result: { projectId: "p3", revision: 1, notes: [] } }),
     );
     await waitFor(() => expect(after.hook.result.current.project?.id).toBe("p3"));
-    expect(sessionStorage.getItem("intent-harness:started-operations")).toBe("[]");
+    expect(sessionStorage.getItem("zigzag:started-operations")).toBe("[]");
   });
 
   it("does nothing without a project", async () => {

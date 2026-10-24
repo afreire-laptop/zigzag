@@ -6,19 +6,19 @@ This is how a change moves from request to pull request. Every step can be done 
 
 ```
 intake → implementation → deterministic checks → independent reviews → fixes and rechecks → pre-PR readiness
-ih-intake   ih-execute        pnpm check (+ gates)    ih-review             ih-execute, ih-review   ih-pre-pr
+zz-intake   zz-execute        pnpm check (+ gates)    zz-review             zz-execute, zz-review   zz-pre-pr
 ```
 
 Trivial changes skip the review stages: a typo, or a comment that changes no behavior. If a change has tests to verify, or could change behavior, it goes through the whole workflow.
 
 ## Stages
 
-1. **Intake** (`ih-intake`). Take a read-only inventory of the code involved. Choose the smallest document that fits, using [docs/README.md](../README.md). Write numbered acceptance criteria with test levels, and a verification plan. The `spec-reviewer` agent reviews any PRD or spec. The user approves the scope.
-2. **Implementation** (`ih-execute`). Make small commits, test-first, with one writer per file. The `python-api-engineer` and `react-ui-engineer` agents each work only inside their own app. In a trusted folder, a hook blocks their Edit and Write tools outside it. The coordinator owns the contract, the generated client, docs, and root configuration.
+1. **Intake** (`zz-intake`). Take a read-only inventory of the code involved. Choose the smallest document that fits, using [docs/README.md](../README.md). Write numbered acceptance criteria with test levels, and a verification plan. The `spec-reviewer` agent reviews any PRD or spec. The user approves the scope.
+2. **Implementation** (`zz-execute`). Make small commits, test-first, with one writer per file. The `python-api-engineer` and `react-ui-engineer` agents each work only inside their own app. In a trusted folder, a hook blocks their Edit and Write tools outside it. The coordinator owns the contract, the generated client, docs, and root configuration.
 3. **Deterministic checks.** `pnpm check`, plus the further gates the changed paths require.
-4. **Independent reviews** (`ih-review`). A fresh Claude `code-reviewer` and a Codex adversarial review examine the same frozen commit. Neither sees the other's conclusions, and both are read-only. Raw reports and the findings register stay in the git-ignored `.reviews/<run>/`; see [Review records](#review-records).
+4. **Independent reviews** (`zz-review`). A fresh Claude `code-reviewer` and a Codex adversarial review examine the same frozen commit. Neither sees the other's conclusions, and both are read-only. Raw reports and the findings register stay in the git-ignored `.reviews/<run>/`; see [Review records](#review-records).
 5. **Fixes and rechecks.** Reproduce each finding in a temporary worktree. Fix it with a regression test, reject it with evidence, or defer it with a scope and a tracking document. Then rerun the gates, and have both reviewers verify the fixes on the new commit.
-6. **Pre-PR readiness** (`ih-pre-pr`). `scripts/readiness.py` runs the gates and checks the evidence. Then commit the run record to `docs/records/`, and draft the PR. Pushing and opening the PR are the owner's decisions.
+6. **Pre-PR readiness** (`zz-pre-pr`). `scripts/readiness.py` runs the gates and checks the evidence. Then commit the run record to `docs/records/`, and draft the PR. Pushing and opening the PR are the owner's decisions.
 
 ## Gates
 

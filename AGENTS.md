@@ -1,4 +1,4 @@
-# Intent Harness
+# zigzag
 
 Product boundary: [docs/product/tenet.md](docs/product/tenet.md). Behavioral fixtures (not specifications or hardcoded answers): [docs/product/journeys.md](docs/product/journeys.md). Architecture: [docs/decisions/0001](docs/decisions/0001-python-api-and-workspace.md).
 
@@ -30,7 +30,7 @@ The next milestone is the changing-brief journey: conflicts, and model-proposed 
 - `fixtures/`: journey texts, canned proposals (`journeys.json`), and the legacy goldens that the Python domain must reproduce.
 - `docs/`: one folder per document type. [docs/README.md](docs/README.md) says which document a change needs, and has the templates.
 - `scripts/`: the gates that `pnpm` and CI run, including the docs check and the readiness check. Also the review launchers, and `run_record.py`, which writes a run's public record.
-- `.agents/skills/`: the canonical workflow skills (`ih-intake`, `ih-execute`, `ih-review`, `ih-pre-pr`). `.claude/skills/` holds relative symlinks to them. `.claude/agents/` defines the subagents, and `.claude/hooks/` their scope guard.
+- `.agents/skills/`: the canonical workflow skills (`zz-intake`, `zz-execute`, `zz-review`, `zz-pre-pr`). `.claude/skills/` holds relative symlinks to them. `.claude/agents/` defines the subagents, and `.claude/hooks/` their scope guard.
 
 ## Commands
 

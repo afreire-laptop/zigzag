@@ -70,4 +70,4 @@ Each criterion is an observable test at the highest useful seam: the application
 
 ## Likely affected files
 
-`apps/api/src/intent_harness/application/operations.py`, `adapters/http/app.py`, `adapters/http/schemas.py`, `adapters/persistence/files.py` (record format), `apps/api/tests/application/test_operations.py`, `apps/api/tests/api/`, `apps/web/src/platform/api.ts`, `apps/web/src/features/workspace/use-workspace.ts`, and the generated contract.
+`apps/api/src/zigzag/application/operations.py`, `adapters/http/app.py`, `adapters/http/schemas.py`, `adapters/persistence/files.py` (record format), `apps/api/tests/application/test_operations.py`, `apps/api/tests/api/`, `apps/web/src/platform/api.ts`, `apps/web/src/features/workspace/use-workspace.ts`, and the generated contract.

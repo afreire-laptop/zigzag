@@ -13,12 +13,12 @@ from typing import Any
 import httpx
 from fastapi import FastAPI
 
-from intent_harness.adapters.model.openrouter import OpenRouterClient
-from intent_harness.application.assessment import LiveAssessor
-from intent_harness.application.ports import Assessor, AssessRequest, CallAttempt, ModelCallError, ModelReply
-from intent_harness.config import Config
-from intent_harness.main import build
 from tests.support import FIXTURES
+from zigzag.adapters.model.openrouter import OpenRouterClient
+from zigzag.application.assessment import LiveAssessor
+from zigzag.application.ports import Assessor, AssessRequest, CallAttempt, ModelCallError, ModelReply
+from zigzag.config import Config
+from zigzag.main import build
 
 type Step = str | Exception | Callable[[AssessRequest], Awaitable[str]]
 

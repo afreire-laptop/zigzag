@@ -184,7 +184,7 @@ importers:
       '@fontsource-variable/geist':
         specifier: 5.3.0
         version: 5.3.0
-      '@intent-harness/api-client':
+      '@zigzag/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
       class-variance-authority:
@@ -273,7 +273,7 @@ importers:
       '@hey-api/openapi-ts':
         specifier: 0.99.0
         version: 0.99.0(magicast@0.5.5)(typescript@6.0.3)
-      '@intent-harness/api':
+      '@zigzag/api':
         specifier: workspace:*
         version: link:../../apps/api
       typescript:

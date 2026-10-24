@@ -1,11 +1,11 @@
-# Intent Harness Tenet v0.1
+# zigzag Tenet v0.1
 
 **Status:** Current  
 **Revised:** 5 October 2026, following adversarial review.  
 **Purpose:** A working foundation for product and architecture decisions.  
 **Scope:** One person turning an idea or brief into reviewed intent.
 
-> Intent Harness helps people decide what to pursue and why, keeping evidence, assumptions, and human choices visible to downstream work.
+> zigzag helps people decide what to pursue and why, keeping evidence, assumptions, and human choices visible to downstream work.
 
 ## The problem and the boundary
 
@@ -83,7 +83,7 @@ Selected foundations retained from the original research:
 - [Design Council: Framework for Innovation](https://www.designcouncil.org.uk/resources/framework-for-innovation/) — explore, focus, and revisit understanding.
 - [Nielsen: usability heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/) — make status and user control clear.
 
-These references inform the choices here; they do not establish the effectiveness of Intent Harness.
+These references inform the choices here; they do not establish the effectiveness of zigzag.
 
 ## What architecture must preserve
 

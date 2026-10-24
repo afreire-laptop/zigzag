@@ -1,4 +1,4 @@
-import { client } from "@intent-harness/api-client";
+import { client } from "@zigzag/api-client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { operation, project } from "@/test/factories";
 import { api, RequestFailed, toFailure } from "./api";

@@ -7,14 +7,14 @@ from pathlib import Path
 import httpx
 import pytest
 
-from intent_harness.adapters.persistence.files import FileOperationStore, FileProjectStore, JsonlCallLog
-from intent_harness.application.errors import ApplicationError
-from intent_harness.application.operations import CommitMarker, ModelCall, Operation, OperationRecord, OperationRunner
-from intent_harness.application.ports import Assessor, AssessRequest, Loaded
-from intent_harness.application.projects import ProjectLocks
-from intent_harness.domain.model import Project
 from tests.api.harness import Counter, ScriptedAssessor, Ticker, call_log, gateway, wait_until
 from tests.support import CLEAR, canned, failing_fsync, project_from, text
+from zigzag.adapters.persistence.files import FileOperationStore, FileProjectStore, JsonlCallLog
+from zigzag.application.errors import ApplicationError
+from zigzag.application.operations import CommitMarker, ModelCall, Operation, OperationRecord, OperationRunner
+from zigzag.application.ports import Assessor, AssessRequest, Loaded
+from zigzag.application.projects import ProjectLocks
+from zigzag.domain.model import Project
 
 pytestmark = pytest.mark.anyio
 CLEAR_RAW = json.dumps(canned("clear brief"))

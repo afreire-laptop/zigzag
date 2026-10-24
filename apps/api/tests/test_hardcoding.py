@@ -7,7 +7,7 @@ from pathlib import Path
 from tests.support import FIXTURES
 
 TERMS = ["restaurant", "shift manager", "incident", "migration guide", "changelog", "Button and Input", "owner"]
-SOURCE = Path(__file__).resolve().parents[1] / "src" / "intent_harness"
+SOURCE = Path(__file__).resolve().parents[1] / "src" / "zigzag"
 
 
 def test_application_code_contains_no_fixture_terms() -> None:

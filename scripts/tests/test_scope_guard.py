@@ -48,7 +48,7 @@ class ScopeGuardTest(unittest.TestCase):
         )
 
     def test_a_file_inside_the_agents_paths_is_allowed(self) -> None:
-        run = self.run_hook({"file_path": str(self.root / "apps/api/src/intent_harness/domain/model.py")})
+        run = self.run_hook({"file_path": str(self.root / "apps/api/src/zigzag/domain/model.py")})
         self.assertEqual(run.returncode, 0, run.stderr)
 
     def test_a_relative_path_inside_the_agents_paths_is_allowed(self) -> None:

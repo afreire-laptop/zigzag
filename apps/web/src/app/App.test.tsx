@@ -1,6 +1,6 @@
-import type { CurrentProjectView } from "@intent-harness/api-client";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { CurrentProjectView } from "@zigzag/api-client";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { WorkspaceDeps } from "@/features/workspace/use-workspace";
 import { RequestFailed } from "@/platform/api";

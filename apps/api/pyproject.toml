@@ -1,7 +1,7 @@
 [project]
-name = "intent-harness-api"
+name = "zigzag-api"
 version = "0.2.0"
-description = "Intent Harness API: domain authority, persistence, and model operations."
+description = "zigzag API: domain authority, persistence, and model operations."
 requires-python = ">=3.14,<3.15"
 dependencies = [
   "fastapi==0.142.2",
@@ -27,7 +27,7 @@ build-backend = "uv_build"
 required-version = "==0.12.23"
 
 [tool.uv.build-backend]
-module-name = "intent_harness"
+module-name = "zigzag"
 
 [tool.ruff]
 line-length = 120
@@ -40,8 +40,8 @@ ignore = ["S101"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "ARG"]
-# Handoff keys are the camelCase export format (intent-harness.handoff/v0).
-"src/intent_harness/domain/handoff.py" = ["N815"]
+# Handoff keys are the camelCase export format (zigzag.handoff/v0).
+"src/zigzag/domain/handoff.py" = ["N815"]
 "evals/**" = ["T20", "ARG"]  # checks implement one (proposal, project) signature
 "scripts/**" = ["T20"]
 
@@ -62,7 +62,7 @@ filterwarnings = ["error"]
 
 [tool.coverage.run]
 branch = true
-source = ["intent_harness"]
+source = ["zigzag"]
 
 [tool.coverage.report]
 show_missing = true
@@ -70,39 +70,39 @@ skip_empty = true
 exclude_also = ["if TYPE_CHECKING:", "raise AssertionError", "assert_never\\("]
 
 [tool.importlinter]
-root_packages = ["intent_harness"]
+root_packages = ["zigzag"]
 include_external_packages = true
 
 [[tool.importlinter.contracts]]
 name = "Adapters depend on application, application on domain"
 type = "layers"
 layers = [
-  "intent_harness.contract",
-  "intent_harness.main",
-  "intent_harness.adapters",
-  "intent_harness.application",
-  "intent_harness.domain",
+  "zigzag.contract",
+  "zigzag.main",
+  "zigzag.adapters",
+  "zigzag.application",
+  "zigzag.domain",
 ]
 
 [[tool.importlinter.contracts]]
 name = "The domain is pure: no transport, provider, filesystem, clock, or environment access"
 type = "forbidden"
-source_modules = ["intent_harness.domain"]
-forbidden_modules = ["fastapi", "starlette", "httpx", "uvicorn", "asyncio", "anyio", "os", "pathlib", "time", "random", "uuid", "intent_harness.config"]
+source_modules = ["zigzag.domain"]
+forbidden_modules = ["fastapi", "starlette", "httpx", "uvicorn", "asyncio", "anyio", "os", "pathlib", "time", "random", "uuid", "zigzag.config"]
 
 [[tool.importlinter.contracts]]
 name = "Application code owns ports, not transports or providers"
 type = "forbidden"
-source_modules = ["intent_harness.application"]
-forbidden_modules = ["fastapi", "starlette", "httpx", "uvicorn", "os", "pathlib", "intent_harness.config"]
+source_modules = ["zigzag.application"]
+forbidden_modules = ["fastapi", "starlette", "httpx", "uvicorn", "os", "pathlib", "zigzag.config"]
 
 [[tool.importlinter.contracts]]
 name = "Only the composition root reads configuration"
 type = "forbidden"
-source_modules = ["intent_harness.adapters"]
-forbidden_modules = ["intent_harness.config"]
+source_modules = ["zigzag.adapters"]
+forbidden_modules = ["zigzag.config"]
 
 [[tool.importlinter.contracts]]
 name = "Adapters do not reach into one another"
 type = "independence"
-modules = ["intent_harness.adapters.http", "intent_harness.adapters.persistence", "intent_harness.adapters.model"]
+modules = ["zigzag.adapters.http", "zigzag.adapters.persistence", "zigzag.adapters.model"]

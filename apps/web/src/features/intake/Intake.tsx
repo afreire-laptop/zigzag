@@ -1,4 +1,4 @@
-import type { RecoveryView, StatusView } from "@intent-harness/api-client";
+import type { RecoveryView, StatusView } from "@zigzag/api-client";
 import { type FormEvent, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/design-system/ui/alert";
 import { Button } from "@/design-system/ui/button";
@@ -32,8 +32,8 @@ export function Intake(props: {
         Start from a brief
       </h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Paste an idea or brief as you would give it to a colleague. Intent Harness records what you said in your own
-        words, points out the few uncertainties that would change the next step, and lets you choose or leave them open.
+        Paste an idea or brief as you would give it to a colleague. zigzag records what you said in your own words,
+        points out the few uncertainties that would change the next step, and lets you choose or leave them open.
       </p>
       {props.recovery && (
         <Alert className="mt-4 border-warning-foreground/40 bg-warning text-warning-foreground">

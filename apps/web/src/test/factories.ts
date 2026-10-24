@@ -1,12 +1,5 @@
 // Test data typed by the generated contract, so a contract change breaks these tests at compile time.
-import type {
-  DecisionView,
-  HandoffView,
-  Operation,
-  ProjectView,
-  QuestionView,
-  StatusView,
-} from "@intent-harness/api-client";
+import type { DecisionView, HandoffView, Operation, ProjectView, QuestionView, StatusView } from "@zigzag/api-client";
 import { type Mocked, vi } from "vitest";
 import { type Api, api } from "@/platform/api";
 

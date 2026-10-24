@@ -1,5 +1,5 @@
 {
-  "name": "@intent-harness/api-client",
+  "name": "@zigzag/api-client",
   "private": true,
   "type": "module",
   "description": "TypeScript types, SDK, and Zod validators generated from the API's OpenAPI contract. Do not edit src/generated.",
@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "0.99.0",
-    "@intent-harness/api": "workspace:*",
+    "@zigzag/api": "workspace:*",
     "typescript": "6.0.3"
   }
 }

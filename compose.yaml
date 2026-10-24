@@ -1,6 +1,6 @@
 # The fixture application on a fresh machine:  cp .env.example .env && docker compose up --build
 # Then open http://127.0.0.1:8080. Live mode is configured in .env (see README).
-name: intent-harness
+name: zigzag
 
 x-hardening: &hardening
   read_only: true
@@ -13,24 +13,24 @@ services:
   api:
     <<: *hardening
     build: { context: ., dockerfile: apps/api/Dockerfile }
-    image: intent-harness-api:local
+    image: zigzag-api:local
     env_file: [.env] # secrets are injected at run time, never built into the image
     environment:
-      INTENT_DATA_DIR: /data
-      INTENT_FIXTURES_PATH: /app/fixtures/journeys.json
-      INTENT_ALLOWED_HOSTS: localhost,127.0.0.1,api
-    volumes: [intent-data:/data]
+      ZIGZAG_DATA_DIR: /data
+      ZIGZAG_FIXTURES_PATH: /app/fixtures/journeys.json
+      ZIGZAG_ALLOWED_HOSTS: localhost,127.0.0.1,api
+    volumes: [data:/data]
     expose: ["8000"] # reachable from the web container only; not published to the host
     stop_grace_period: 25s
 
   web:
     <<: *hardening
     build: { context: ., dockerfile: apps/web/Dockerfile }
-    image: intent-harness-web:local
-    ports: ["127.0.0.1:${INTENT_WEB_PORT:-8080}:8080"] # unauthenticated local POC: bound to localhost only
+    image: zigzag-web:local
+    ports: ["127.0.0.1:${ZIGZAG_WEB_PORT:-8080}:8080"] # unauthenticated local POC: bound to localhost only
     depends_on:
       api: { condition: service_healthy }
     stop_grace_period: 10s
 
 volumes:
-  intent-data:
+  data:

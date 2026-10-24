@@ -3,11 +3,6 @@ The affected decision is superseded; history and unrelated decisions stay."""
 
 import json
 
-from intent_harness.domain.handoff import HANDOFF_ADAPTER, Handoff, current_exports
-from intent_harness.domain.invariants import check_invariants
-from intent_harness.domain.model import Project
-from intent_harness.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
-from intent_harness.domain.transitions import Rejected, apply_user_text, defer_question, select_option
 from tests.support import (
     AMBIGUOUS,
     FOCUS_QUESTION,
@@ -20,6 +15,11 @@ from tests.support import (
     text,
     validated,
 )
+from zigzag.domain.handoff import HANDOFF_ADAPTER, Handoff, current_exports
+from zigzag.domain.invariants import check_invariants
+from zigzag.domain.model import Project
+from zigzag.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
+from zigzag.domain.transitions import Rejected, apply_user_text, defer_question, select_option
 
 
 def ambiguous() -> Project:

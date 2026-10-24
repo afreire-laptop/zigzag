@@ -197,7 +197,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     for required in (register, readiness_path):
         if not required.is_file():
             print(
-                f"{args.run}: missing {required.name}; write it with ih-review and readiness.py --out", file=sys.stderr
+                f"{args.run}: missing {required.name}; write it with zz-review and readiness.py --out", file=sys.stderr
             )
             return 2
     checked = read_readiness(readiness_path)

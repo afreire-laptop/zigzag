@@ -7,10 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from intent_harness.adapters.persistence.files import FileOperationStore, FileProjectStore, InconsistentRecordError
-from intent_harness.application.ports import Corrupt, Found, Missing
-from intent_harness.domain.handoff import current_exports
-from tests.support import CLEAR, GOLDEN, failing_fsync, project_from
+from tests.support import CLEAR, GOLDEN, LEGACY_HANDOFF_FORMAT, as_current_format, failing_fsync, project_from
+from zigzag.adapters.persistence.files import FileOperationStore, FileProjectStore, InconsistentRecordError
+from zigzag.application.ports import Corrupt, Found, Missing
+from zigzag.domain.handoff import current_exports
 
 
 def test_save_replaces_atomically_and_leaves_no_temporary_files(tmp_path: Path) -> None:
@@ -119,9 +119,15 @@ def test_records_written_by_the_legacy_implementation_load_and_export_unchanged(
     (tmp_path / "projects" / f"{project_id}.json").write_text(final["storedFile"])
     loaded = store.load(project_id)
     assert isinstance(loaded, Found), loaded
+    # Reviewed copies stay exactly as they were at review time, including the format id they were exported with.
+    assert all(LEGACY_HANDOFF_FORMAT in review.json_copy for review in loaded.project.reviews)
     if final["exports"]["status"] == "reviewed" or scenario["name"] != "ambiguous-deferred-by-reply-then-selected":
         exports = current_exports(loaded.project)
-        assert (exports.markdown, exports.json) == (final["exports"]["markdown"], final["exports"]["json"])
+        expected = final["exports"]
+        # A reviewed revision exports its copies from review time; a draft is rendered now, with the current format id.
+        reviewed = expected["status"] == "reviewed"
+        want = [text if reviewed else as_current_format(text) for text in (expected["markdown"], expected["json"])]
+        assert [exports.markdown, exports.json] == want
 
 
 def test_unreadable_operation_files_are_reported_not_deleted(tmp_path: Path) -> None:
