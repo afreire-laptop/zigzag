@@ -15,6 +15,8 @@ docker compose up --build
 
 Then open http://127.0.0.1:8080. If you already have an `.env`, keep it and edit it in place, as [Upgrading](#upgrading) describes.
 
+To use another port, set it in the shell, for example `ZIGZAG_WEB_PORT=9090 docker compose up`. Do not put `ZIGZAG_WEB_PORT` in `.env`: Compose passes `.env` to the API, which refuses settings it does not know.
+
 The app starts in **fixture mode**: it serves canned journey responses for the fixture texts, labels them as fixtures everywhere, and refuses any other text.
 
 Projects persist across restarts in the `zigzag_data` Docker volume, and `docker compose down -v` deletes them. Because there is no authentication, the web port is bound to `127.0.0.1`, and the API is reachable only through the web container.
@@ -43,17 +45,19 @@ Only `ZIGZAG_*` variables are read; shell variables such as `OPENROUTER_API_KEY`
 
 The project was renamed from intent-harness to zigzag. An existing checkout needs two changes:
 
-1. In `.env`, rename every `INTENT_` variable to `ZIGZAG_`, for example `INTENT_MODEL` to `ZIGZAG_MODEL`. Startup names every leftover `INTENT_` variable with its replacement.
+1. In `.env`, rename every `INTENT_` variable to `ZIGZAG_`, for example `INTENT_MODEL` to `ZIGZAG_MODEL`. Startup names every leftover `INTENT_` variable with its replacement. `INTENT_EFFORT` and `INTENT_MAX_TOKENS` are retired rather than renamed; see [From the Express version](#from-the-express-version).
 2. To keep the projects in the old `intent-harness_intent-data` volume, copy them into the new `zigzag_data` volume before the first start:
 
    ```sh
    docker compose -p intent-harness down    # stops the old stack and keeps its volume
-   docker compose up --no-start --build     # creates the zigzag_data volume
-   docker run --rm -v intent-harness_intent-data:/from:ro -v zigzag_data:/to alpine:3.20 cp -a /from/. /to/
+   docker compose up --no-start --build     # creates an empty zigzag_data volume
+   docker volume inspect intent-harness_intent-data >/dev/null &&
+     docker run --rm --entrypoint sh -v intent-harness_intent-data:/from:ro -v zigzag_data:/to zigzag-api:local \
+       -c 'if [ -n "$(ls -A /to)" ]; then echo "zigzag_data is not empty: nothing copied" >&2; exit 1; fi; cp -a /from/. /to/'
    docker compose up
    ```
 
-   The old volume stays until you delete it with `docker volume rm intent-harness_intent-data`.
+   The copy stops without changing anything if the old volume does not exist, or if `zigzag_data` already holds data, for example from an earlier start. The old volume stays until you delete it with `docker volume rm intent-harness_intent-data`.
 
 Exports now name their format `zigzag.handoff/v0`. Copies reviewed before the rename keep `intent-harness.handoff/v0`; see [the handoff format](docs/reference/handoff-format.md).
 
