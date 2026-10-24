@@ -119,8 +119,12 @@ def test_records_written_by_the_legacy_implementation_load_and_export_unchanged(
     (tmp_path / "projects" / f"{project_id}.json").write_text(final["storedFile"])
     loaded = store.load(project_id)
     assert isinstance(loaded, Found), loaded
+    if final["exports"]["status"] == "reviewed":
+        assert loaded.project.reviews
     # Reviewed copies stay exactly as they were at review time, including the format id they were exported with.
-    assert all(LEGACY_HANDOFF_FORMAT in review.json_copy for review in loaded.project.reviews)
+    for review in loaded.project.reviews:
+        assert LEGACY_HANDOFF_FORMAT in review.json_copy
+        assert LEGACY_HANDOFF_FORMAT in review.markdown
     if final["exports"]["status"] == "reviewed" or scenario["name"] != "ambiguous-deferred-by-reply-then-selected":
         exports = current_exports(loaded.project)
         expected = final["exports"]

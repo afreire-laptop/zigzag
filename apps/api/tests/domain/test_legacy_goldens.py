@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from tests.support import GOLDEN, as_current_format, validated
+from tests.support import CLEAR, GOLDEN, LEGACY_HANDOFF_FORMAT, as_current_format, project_from, validated
 from zigzag.domain.handoff import (
     HANDOFF_ADAPTER,
     build_handoff,
@@ -132,6 +132,14 @@ def test_replay_reproduces_legacy_records_and_exports(path: Path) -> None:
             assert [
                 {"section": c.section, "added": list(c.added), "removed": list(c.removed)} for c in changes
             ] == expected
+
+
+def test_current_exports_name_the_zigzag_format() -> None:
+    """The replay maps the legacy id to HANDOFF_FORMAT, so this pins the identifier itself."""
+    exports = current_exports(project_from(CLEAR, "clear brief"))
+    assert json.loads(exports.json)["format"] == "zigzag.handoff/v0"
+    assert "_zigzag.handoff/v0 · project test1 · " in exports.markdown
+    assert LEGACY_HANDOFF_FORMAT not in exports.json + exports.markdown
 
 
 def test_f3_is_corrected_the_deferral_inside_a_reply_is_marked_partly_superseded() -> None:
