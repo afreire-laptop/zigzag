@@ -46,18 +46,18 @@ Only `ZIGZAG_*` variables are read; shell variables such as `OPENROUTER_API_KEY`
 The project was renamed from intent-harness to zigzag. An existing checkout needs two changes:
 
 1. In `.env`, rename every `INTENT_` variable to `ZIGZAG_`, for example `INTENT_MODEL` to `ZIGZAG_MODEL`. Startup names every leftover `INTENT_` variable with its replacement. `INTENT_EFFORT` and `INTENT_MAX_TOKENS` are retired rather than renamed; see [From the Express version](#from-the-express-version).
-2. To keep the projects in the old `intent-harness_intent-data` volume, copy them into the new `zigzag_data` volume before the first start:
+2. To keep the projects in the old `intent-harness_intent-data` volume, copy them into the new `zigzag_data` volume before the first start. These commands stop the old stack without deleting its volume, create an empty `zigzag_data` volume, copy the old projects into it with the API image, and start zigzag; each runs only if the previous one succeeded:
 
    ```sh
-   docker compose -p intent-harness down    # stops the old stack and keeps its volume
-   docker compose up --no-start --build     # creates an empty zigzag_data volume
+   docker compose -p intent-harness down &&
+   docker compose up --no-start --build &&
    docker volume inspect intent-harness_intent-data >/dev/null &&
-     docker run --rm --entrypoint sh -v intent-harness_intent-data:/from:ro -v zigzag_data:/to zigzag-api:local \
-       -c 'if [ -n "$(ls -A /to)" ]; then echo "zigzag_data is not empty: nothing copied" >&2; exit 1; fi; cp -a /from/. /to/'
+   docker run --rm --user 0 --entrypoint sh -v intent-harness_intent-data:/from:ro -v zigzag_data:/to zigzag-api:local \
+     -c 'if [ -n "$(ls -A /to)" ]; then echo "zigzag_data is not empty: nothing copied" >&2; exit 1; fi; cp -a /from/. /to/' &&
    docker compose up
    ```
 
-   The copy stops without changing anything if the old volume does not exist, or if `zigzag_data` already holds data, for example from an earlier start. The old volume stays until you delete it with `docker volume rm intent-harness_intent-data`.
+   If the old volume does not exist, or `zigzag_data` already holds data, for example from an earlier start, nothing is copied and zigzag does not start. The old volume stays until you delete it with `docker volume rm intent-harness_intent-data`.
 
 Exports now name their format `zigzag.handoff/v0`. Copies reviewed before the rename keep `intent-harness.handoff/v0`; see [the handoff format](docs/reference/handoff-format.md).
 
