@@ -1,6 +1,6 @@
 # Idempotent model starts
 
-**Status:** Ready for implementation; not started · **Updated:** 2026-10-06 · **Scheduled:** before regular live-model use (owner's instruction, 2026-10-06) · **Origin:** Codex pass 7 in the [migration run record](../records/2026-10-06-python-api-migration.md), recorded as a known gap in [ADR 0001](../decisions/0001-python-api-and-workspace.md)
+**Status:** Ready for implementation; not started · **Updated:** 2026-10-24 · **Scheduled:** before regular live-model use (owner's instruction, 2026-10-06) · **Origin:** Codex pass 7 in the [migration run record](../records/2026-10-06-python-api-migration.md), recorded as a known gap in [ADR 0001](../decisions/0001-python-api-and-workspace.md)
 
 ## Problem
 
@@ -10,40 +10,40 @@ Three routes start paid model work:
 - `POST /api/projects/{id}/replies`
 - `POST /api/projects/{id}/assessments`
 
-Each request creates a new operation. `OperationRunner._spawn` refuses a duplicate only while the first operation is active in memory. So:
+Each request creates a new operation, and `OperationRunner._spawn` in `apps/api/src/zigzag/application/operations.py` refuses a duplicate only while the first operation is active in memory. As a result:
 
 - If a create's `202` is lost, or the brief is resubmitted after its operation ends, the API starts another paid call and creates a second project.
 - Replies and reassessments carry a base revision, which protects some retries. A reassessment that added nothing leaves the revision unchanged, so repeating it pays for another call.
 - The web client's resume-after-reload and same-request `busy` matching cover only the running operation. They cannot replay a finished start.
 
-Localhost reduces exposure, but it does not prevent lost responses, reloads, or retries.
+Running on localhost reduces the exposure, but it does not prevent lost responses, reloads, or retries.
 
 ## Scope
 
 This is application replay protection: one logical user action starts at most one operation, and asking again returns that operation.
 
-**Not promised:**
+It does not promise:
 
-- Exactly-once execution or billing at the provider. OpenRouter documents no idempotency key for chat completions. A process crash after dispatch, or an ambiguous transport failure, can still leave a charge whose outcome is unknown. ADR 0001 keeps the existing rule: such a request is never repeated automatically.
+- Exactly-once execution or billing at the provider. OpenRouter documents no idempotency key for chat completions. A process crash after dispatch, or an ambiguous transport failure, can still leave a charge whose outcome is unknown. ADR 0001 keeps its existing rule that such a request is never repeated automatically.
 - Deduplication across processes. The API stays single-process.
 - Treating two separate user actions with identical text as one. A deliberate new action gets a new key.
 
-The evaluation runner calls the assessor directly, without the operation runner, and is unaffected.
+The evaluation runner calls the assessor directly, without the operation runner, so it is unaffected.
 
 ## Design
 
-1. **Key.** Each start request carries an `Idempotency-Key` header: an opaque client-generated token matching `^[A-Za-z0-9_-]{16,128}$`, with one key per logical action. A missing or malformed key is rejected with `400` and the `invalid-idempotency-key` problem type, before any other work.
-2. **Fingerprint.** The API derives a request fingerprint from the operation kind, project id, base revision, question id, and trimmed text. The key identifies the action, and the fingerprint detects reuse of a key for a different request.
-3. **Durable registration before dispatch.** The key and fingerprint are new fields of `OperationRecord`. They are written in the record's first save, which already happens before the task is created. A failed save means that no task and no model call exist. Both fields are optional, so existing operation records still load. A record without a key never matches.
-4. **Lookup first.** Every `start_*` method resolves the key before any other check except the damaged-record pause. The other checks it precedes are the base-revision check, `busy`, and project lookup. The lookup has three outcomes:
+1. Each start request carries an `Idempotency-Key` header: an opaque client-generated token matching `^[A-Za-z0-9_-]{16,128}$`, with one key per logical action. A missing or malformed key is rejected with `400` and the `invalid-idempotency-key` problem type, before any other work.
+2. The API derives a request fingerprint from the operation kind, project id, base revision, question id, and trimmed text. The key identifies the action, and the fingerprint detects reuse of a key for a different request.
+3. The key and fingerprint are registered durably before dispatch, as new fields of `OperationRecord`. They are written in the record's first save, which already happens before the task is created, so a failed save means that no task and no model call exist. Both fields are optional, so existing operation records still load, and a record without a key never matches.
+4. Every `start_*` method looks up the key before any other check except the damaged-record pause. The checks it precedes are the base-revision check, `busy`, and project lookup. The lookup has three outcomes:
    - The key is known and the fingerprint matches: the API returns the original operation in its current state, terminal or not, with the same `202` and `Location`, plus `Idempotent-Replayed: true`. It starts no model call.
    - The key is known and the fingerprint differs: the API rejects the request with `422` and the `idempotency-key-reused` problem type. Nothing changes.
    - The key is unknown: the existing checks and registration run.
-5. **Atomic check and register.** The in-memory index from key to operation id is updated in the same synchronous step that saves the record, with no `await` between the lookup and the registration. One event loop therefore admits only one registration per key.
-6. **Restart.** The index is rebuilt from the operation records at startup. A replayed key whose operation was interrupted returns that `interrupted` operation.
-7. **Damaged records.** While any operation record is unreadable, model starts stay paused by the existing `corrupt-record` problem. An unreadable record is therefore never mistaken for an unknown key.
-8. **Web client.** The client generates a key when the user acts: submitting a brief, sending a reply, or a reassessment. It reuses that key only to resend the same action, for example after a network error with no response. Retry after a failure, and a deliberate resubmission, are new actions with new keys. The key is generated in `platform/` and passed through the generated client; no domain rule moves to TypeScript.
-9. **Contract.** The header is declared on the three routes in the Pydantic and FastAPI layer. Run `pnpm contract`.
+5. The check and the registration are atomic. The in-memory index from key to operation id is updated in the same synchronous step that saves the record, with no `await` between the lookup and the registration, so one event loop admits only one registration per key.
+6. At startup, the index is rebuilt from the operation records. A replayed key whose operation was interrupted returns that `interrupted` operation.
+7. While any operation record is unreadable, model starts stay paused by the existing `corrupt-record` problem, so an unreadable record is never mistaken for an unknown key.
+8. The web client generates a key when the user acts: submitting a brief, sending a reply, or requesting a reassessment. It reuses that key only to resend the same action, for example after a network error with no response. A Retry after a failure, and a deliberate resubmission, are new actions with new keys. The key is generated in `platform/` and passed through the generated client; no domain rule moves to TypeScript.
+9. The header is declared on the three routes in the Pydantic and FastAPI layer, and `pnpm contract` regenerates the contract.
 
 ## Acceptance criteria
 
@@ -64,8 +64,8 @@ Each criterion is an observable test at the highest useful seam: the application
 ## Verification
 
 - Write the tests first, and confirm that each one fails against the current runner for the stated reason.
-- Run `pnpm contract`, then `pnpm check`. Run `pnpm e2e`, and `SMOKE_E2E=1 pnpm docker:smoke`, because the routes and the web client change.
-- Update ADR 0001: replace the known gap with the decision and keep the limits above. Update the README section "How work and data behave".
+- Run `pnpm contract`, then `pnpm check`. Because the routes and the web client change, also run `pnpm e2e` and `SMOKE_E2E=1 pnpm docker:smoke`.
+- Update ADR 0001: replace the known gap with the decision, and keep the limits above. Update the README section "How work and data behave".
 - Get independent Claude and Codex reviews, per [the development workflow](../development/workflow.md).
 
 ## Likely affected files

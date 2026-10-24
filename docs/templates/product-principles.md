@@ -6,7 +6,7 @@
 
 ## The problem and the boundary
 
-<What goes wrong without the product. What it deliberately does not do.>
+<What goes wrong without the product, and what it deliberately does not do.>
 
 ## Principles
 
@@ -16,8 +16,8 @@
 
 ## What must be demonstrated next
 
-<The observable behaviors that would show the principles hold. No metrics without evidence.>
+<The observable behaviors that would show the principles hold. No metric without evidence for it.>
 
-## Revision record
+## Version history
 
-<What changed in this version, and which review or evidence prompted it.>
+<What changed in this version, and the review or evidence that prompted it.>

@@ -1,8 +1,8 @@
 # Live-model observations
 
-**Status:** No live run recorded · **Updated:** 2026-10-06 · **Protocol:** [live-model-protocol.md](live-model-protocol.md)
+**Status:** No live run recorded · **Updated:** 2026-10-24 · **Protocol:** [live-model-protocol.md](live-model-protocol.md)
 
-This file holds run evidence only: what was run, against which model, and the human verdict. How to run and judge an evaluation is in the protocol.
+This file holds run evidence only: what was run, against which model, and the human verdict. How to run, judge, and record an evaluation is in the protocol.
 
 ## Status
 
@@ -13,4 +13,4 @@ This file holds run evidence only: what was run, against which model, and the hu
 
 ## Records
 
-None yet. For each run, add the observations file, the scenario, pass or fail, and one or two sentences of rationale. Commit only reviewed and sanitized excerpts, never raw responses.
+None yet. Add each run as the protocol's [Recording a run](live-model-protocol.md#recording-a-run) describes.
