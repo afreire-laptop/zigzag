@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Intent Harness API",
+    "title": "zigzag API",
     "version": "0.2.0"
   },
   "paths": {

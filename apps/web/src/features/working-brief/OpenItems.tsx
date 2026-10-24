@@ -1,4 +1,4 @@
-import type { ProjectView } from "@intent-harness/api-client";
+import type { ProjectView } from "@zigzag/api-client";
 import { Badge } from "@/design-system/ui/badge";
 import { Button } from "@/design-system/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/design-system/ui/card";

@@ -2,12 +2,12 @@
 
 **Status:** Current · **Updated:** YYYY-MM-DD
 
-<Who this is for, and when to use it.>
+<Who this is for, when to use it, and what must be in place first: tools, access, or state.>
 
 ## Steps
 
-<Numbered steps with the exact commands. Say what success looks like at each step.>
+<Numbered steps, each with the exact command to copy and what success looks like.>
 
 ## When it fails
 
-<Common failures, and how to diagnose them.>
+<Common failures, and how to diagnose and fix each one.>

@@ -1,20 +1,28 @@
 # Live-model evaluation protocol
 
-**Status:** Current · **Updated:** 2026-10-06 · **Run records:** [live-model-observations.md](live-model-observations.md)
+**Status:** Current · **Updated:** 2026-10-24 · **Evaluation records:** [live-model-observations.md](live-model-observations.md)
 
-Live observations are kept separate from the deterministic tests. A schema-valid response is necessary, but it does not show that a reading is faithful. Each live run needs a human judgment, recorded with its reason in the run records.
+Live observations are kept separate from the deterministic tests. A schema-valid response is necessary, but it does not show that a reading is faithful, so each live run needs a human judgment, recorded with its reason in the evaluation records.
 
 ## Running
 
-`pnpm eval --budget-usd N --max-calls N [--repeats N] [--cases a,b]` runs the evaluation cases in [apps/api/evals/cases.py](../../apps/api/evals/cases.py) through the configured OpenRouter model, using the app's own validation and state transitions. Every run spends money, so it is never part of CI. The cases are:
+```sh
+pnpm eval --budget-usd N --max-calls N [--repeats N] [--cases a,b]
+```
 
-- the journey briefs and two paraphrases;
-- the detailed, short, and deferring replies;
-- choose-then-reassess and defer-then-reassess;
-- a reply chained to the model's own reading;
-- four negative controls: negation, uncertainty, a conditional, and a suggestion.
+This runs the evaluation cases in [apps/api/evals/cases.py](../../apps/api/evals/cases.py) through the configured OpenRouter model, using the app's own validation and state transitions. Every run spends money, so it is never part of CI. It needs `ZIGZAG_MODEL_MODE=live`, `ZIGZAG_OPENROUTER_API_KEY`, and `ZIGZAG_MODEL`, read from the shell or the repository's `.env`; the shell wins.
 
-For each attempt, the runner records:
+`--cases` takes case ids:
+
+| Cases | What they cover |
+| --- | --- |
+| `clear-brief`, `ambiguous-brief`, `paraphrased-brief`, `second-paraphrase` | The journey briefs, and two paraphrases of the ambiguous one. |
+| `detailed-reply`, `short-reply`, `deferring-reply` | The detailed, short, and deferring replies. |
+| `select-then-reassess`, `defer-then-reassess` | Reassessment after the user selects an option or leaves the question open. |
+| `reply-to-live-brief` | A reply chained to the model's own reading of the ambiguous brief. |
+| `negation-control`, `uncertainty-control`, `conditional-control`, `suggestion-control` | Four negative controls: negation, uncertainty, a conditional, and a suggestion. |
+
+## What each attempt records
 
 - the requested and served model, and the provider;
 - the prompt version;
@@ -25,14 +33,18 @@ For each attempt, the runner records:
 - the reported cost, or *unknown*. It is unknown when any request might have been charged without returning an answer, and the run then stops;
 - failures.
 
-A case whose dependency failed is reported as blocked, never dropped. The summary that the runner writes to `observations/` lists each case's pass and fail criteria, and leaves the human verdict empty. Raw output in `observations/` is git-ignored.
+A case whose dependency failed is reported as blocked, and a case the budget stopped as `skipped-budget`; neither is dropped. Raw output in `observations/` is git-ignored.
+
+## Judging
+
+The summary that the runner writes to `observations/` lists each case's pass and fail criteria, and leaves the human verdict empty. Mechanical checks catch what a rule can catch; whether a reading is faithful stays a human judgment.
 
 ## What still has to be shown with a real call
 
-- **Structured outputs.** Each intended model family, behind the OpenRouter route chosen with `provider.require_parameters`, must honour the strict `json_schema` response format.
-- **Response metadata.** The served model, the provider, `finish_reason`, and usage including `cost` must arrive as the adapter expects.
-- **Errors.** The real 402, 404 (no route for the required parameters), 429, and 503 responses must match the adapter's mapping. The adapter retries 429 and 503 automatically because OpenRouter documents them as rejections made before any model ran.
-- **Ambiguous failures.** The adapter does not repeat a request that timed out after it was sent, so a charge for it is possible. Whether OpenRouter's activity page shows that charge has not been checked.
+- Structured outputs: each intended model family, behind the OpenRouter route chosen with `provider.require_parameters`, must honour the strict `json_schema` response format.
+- Response metadata: the served model, the provider, `finish_reason`, and usage including `cost` must arrive as the adapter expects.
+- Errors: the real 402, 404 (no route for the required parameters), 429, and 503 responses must match the adapter's mapping. The adapter retries 429 and 503 automatically because OpenRouter documents them as rejections made before any model ran.
+- Ambiguous failures: the adapter does not repeat a request that timed out after it was sent, so a charge for it is possible. Whether OpenRouter's activity page shows that charge has not been checked.
 
 Stubbed-transport tests cannot establish any of these. Fixture output is not model evidence.
 

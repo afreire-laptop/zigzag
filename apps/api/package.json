@@ -1,5 +1,5 @@
 {
-  "name": "@intent-harness/api",
+  "name": "@zigzag/api",
   "private": true,
   "description": "Python API. Package scripts wrap uv so Turborepo can orchestrate it; uv owns Python dependencies.",
   "scripts": {
@@ -11,7 +11,7 @@
     "boundaries": "uv run --frozen lint-imports",
     "test": "uv run --frozen coverage run -m pytest && uv run --frozen coverage json -q && uv run --frozen python scripts/check_coverage.py",
     "eval": "sh scripts/eval.sh",
-    "generate": "uv run --frozen python -m intent_harness.contract openapi.json"
+    "generate": "uv run --frozen python -m zigzag.contract openapi.json"
   },
   "devDependencies": {
     "pyright": "1.1.414"

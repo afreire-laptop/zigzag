@@ -7,8 +7,8 @@ import pytest
 from evals.cases import CASES, base_state
 from evals.run import Budget, main, run, summarize
 
-from intent_harness.application.ports import AssessRequest, CallAttempt, ModelCallError, ModelReply, Usage
 from tests.support import canned
+from zigzag.application.ports import AssessRequest, CallAttempt, ModelCallError, ModelReply, Usage
 
 pytestmark = pytest.mark.anyio
 EMPTY = json.dumps({"extracted": [], "resolutions": [], "newItems": [], "focus": None})
@@ -131,9 +131,9 @@ def test_bases_cover_choice_and_deferral() -> None:
 
 
 def test_the_runner_refuses_to_spend_without_live_configuration(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("INTENT_MODEL_MODE", raising=False)
+    monkeypatch.delenv("ZIGZAG_MODEL_MODE", raising=False)
     assert main(["--budget-usd", "1", "--max-calls", "1"]) == 2
-    monkeypatch.setenv("INTENT_MODEL_MODE", "fixtur")
+    monkeypatch.setenv("ZIGZAG_MODEL_MODE", "fixtur")
     assert main(["--budget-usd", "1", "--max-calls", "1"]) == 2
     with pytest.raises(SystemExit):
         main([])

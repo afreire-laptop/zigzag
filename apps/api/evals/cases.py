@@ -13,10 +13,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-from intent_harness.adapters.model.fixture import FixtureFile, load_fixtures
-from intent_harness.domain.model import OpenItem, Project
-from intent_harness.domain.proposal import ProposalContext, Valid, ValidProposal, validate_proposal
-from intent_harness.domain.transitions import create_project, defer_question, select_option
+from zigzag.adapters.model.fixture import FixtureFile, load_fixtures
+from zigzag.domain.model import OpenItem, Project
+from zigzag.domain.proposal import ProposalContext, Valid, ValidProposal, validate_proposal
+from zigzag.domain.transitions import create_project, defer_question, select_option
 
 FIXTURES = Path(__file__).resolve().parents[3] / "fixtures" / "journeys.json"
 type Check = Callable[[ValidProposal, Project], bool]

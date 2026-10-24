@@ -9,9 +9,9 @@ from typing import Any
 import httpx
 import pytest
 
-from intent_harness.application.ports import AssessRequest, ModelCallError
 from tests.api.harness import ScriptedAssessor, call_log, completion, gateway, running, scripted, unavailable
 from tests.support import AMBIGUOUS, CLEAR, FOCUS_QUESTION, SOFTWARE_QUESTION, canned, text
+from zigzag.application.ports import AssessRequest, ModelCallError
 
 pytestmark = pytest.mark.anyio
 EMPTY = json.dumps({"extracted": [], "resolutions": [], "newItems": [], "focus": None})

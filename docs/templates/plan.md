@@ -4,7 +4,7 @@
 
 | Step | Work | Done when | Evidence |
 | --- | --- | --- | --- |
-| 1 | <a reviewable change> | <an observable check> | <the commit, or "not yet"> |
+| 1 | <one reviewable change> | <an observable check> | <the commit, or "not yet"> |
 
 ## Verification status
 

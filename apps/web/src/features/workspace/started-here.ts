@@ -4,7 +4,7 @@
  * the brief it shows, so another window's operation cannot replace that brief. Storage failures only mean a
  * reload will not resume following.
  */
-const KEY = "intent-harness:started-operations";
+const KEY = "zigzag:started-operations";
 const KEEP = 20;
 
 function read(): string[] {

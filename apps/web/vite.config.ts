@@ -4,8 +4,8 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
 // The browser calls the API on its own origin; the dev and preview servers proxy /api to it,
-// as nginx does in the container. INTENT_API_ORIGIN points the proxy at a different API port.
-const api = process.env.INTENT_API_ORIGIN ?? "http://127.0.0.1:8000";
+// as nginx does in the container. ZIGZAG_API_ORIGIN points the proxy at a different API port.
+const api = process.env.ZIGZAG_API_ORIGIN ?? "http://127.0.0.1:8000";
 const proxy = { "/api": { target: api, changeOrigin: false } };
 
 export default defineConfig({

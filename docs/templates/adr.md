@@ -1,10 +1,10 @@
-# ADR NNNN: <decision>
+# ADR NNNN: <the decision, as a short statement>
 
-**Status:** Proposed · **Date:** YYYY-MM-DD · **Supersedes:** <ADR or none>
+**Status:** Proposed · **Date:** YYYY-MM-DD · **Supersedes:** <ADR NNNN, or none>
 
 ## Context
 
-<The forces at play, with evidence. What is fixed, and what is uncertain.>
+<The forces that make a decision necessary, with evidence: what is fixed, and what is uncertain.>
 
 ## Decision
 
@@ -16,4 +16,4 @@
 
 ## Consequences
 
-<What becomes easier or harder. Known gaps, with their scope and follow-up.>
+<What becomes easier, and what becomes harder. Known gaps, each with its scope and follow-up.>

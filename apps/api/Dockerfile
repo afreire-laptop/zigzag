@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# Intent Harness API. Build from the repository root: docker build -f apps/api/Dockerfile .
+# zigzag API. Build from the repository root: docker build -f apps/api/Dockerfile .
 ARG PYTHON_IMAGE=python:3.14.8-slim-trixie
 ARG UV_IMAGE=ghcr.io/astral-sh/uv:0.12.23
 
@@ -24,13 +24,13 @@ COPY fixtures/journeys.json /app/fixtures/journeys.json
 ENV PATH=/app/.venv/bin:$PATH \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    INTENT_DATA_DIR=/data \
-    INTENT_FIXTURES_PATH=/app/fixtures/journeys.json
+    ZIGZAG_DATA_DIR=/data \
+    ZIGZAG_FIXTURES_PATH=/app/fixtures/journeys.json
 USER app
 EXPOSE 8000
 VOLUME ["/data"]
 HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=3 \
   CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=2)"]
 # One process, one worker: project locks and operation tracking live in this process.
-CMD ["uvicorn", "intent_harness.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", \
+CMD ["uvicorn", "zigzag.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", \
      "--workers", "1", "--timeout-graceful-shutdown", "20", "--no-server-header"]

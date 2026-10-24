@@ -1,7 +1,7 @@
 // Follows one operation to its end. SSE only says "something changed"; each message carries the persisted
 // state, is validated, and is applied once per version. If the stream drops, the REST resource is asked
 // directly, and the stream is reopened if work is still in progress. Nothing here starts or repeats work.
-import { type Operation, zOperation } from "@intent-harness/api-client";
+import { type Operation, zOperation } from "@zigzag/api-client";
 
 export type StreamLike = {
   onmessage: ((event: MessageEvent<string>) => void) | null;

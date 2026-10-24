@@ -369,7 +369,7 @@ class GateRoutingTest(unittest.TestCase):
         return [g.name for g in readiness.required_gates(paths)]
 
     def test_docs_only_changes_need_only_the_check(self) -> None:
-        self.assertEqual(self.names("docs/README.md", ".agents/skills/ih-review/SKILL.md"), ["pnpm check"])
+        self.assertEqual(self.names("docs/README.md", ".agents/skills/zz-review/SKILL.md"), ["pnpm check"])
 
     def test_web_changes_need_the_browser_journeys(self) -> None:
         self.assertEqual(self.names("apps/web/src/app/App.tsx"), ["pnpm check", "pnpm e2e"])

@@ -1,4 +1,4 @@
-import type { StatusView } from "@intent-harness/api-client";
+import type { StatusView } from "@zigzag/api-client";
 import { useEffect, useRef, useState } from "react";
 import { StatusPill } from "@/design-system/status-pill";
 import { Alert, AlertDescription, AlertTitle } from "@/design-system/ui/alert";
@@ -49,7 +49,7 @@ export function App({ deps }: { deps: WorkspaceDeps }) {
       </a>
       <header className="border-b bg-card">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-          <span className="font-bold">Intent Harness</span>
+          <span className="font-bold">zigzag</span>
           {project && !showIntake && (
             <nav aria-label="Surfaces" className="flex gap-1">
               {(

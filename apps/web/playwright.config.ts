@@ -8,7 +8,7 @@ import { defineConfig, devices } from "@playwright/test";
 // With E2E_BASE_URL set, the journeys run against an existing stack instead, such as the containers.
 const apiPort = Number(process.env.E2E_API_PORT ?? 8199);
 const webPort = Number(process.env.E2E_WEB_PORT ?? 4199);
-const dataDir = process.env.E2E_DATA_DIR ?? mkdtempSync(join(tmpdir(), "intent-harness-e2e-"));
+const dataDir = process.env.E2E_DATA_DIR ?? mkdtempSync(join(tmpdir(), "zigzag-e2e-"));
 const repo = resolve(import.meta.dirname, "../..");
 const external = process.env.E2E_BASE_URL;
 
@@ -32,15 +32,15 @@ export default defineConfig({
     ? []
     : [
         {
-          command: `uv run --frozen uvicorn intent_harness.main:create_app --factory --host 127.0.0.1 --port ${apiPort}`,
+          command: `uv run --frozen uvicorn zigzag.main:create_app --factory --host 127.0.0.1 --port ${apiPort}`,
           cwd: resolve(repo, "apps/api"),
           url: `http://127.0.0.1:${apiPort}/api/health`,
           reuseExistingServer: false,
           env: {
-            INTENT_MODEL_MODE: "fixture",
-            INTENT_DATA_DIR: dataDir,
-            INTENT_FIXTURES_PATH: resolve(repo, "fixtures/journeys.json"),
-            INTENT_ALLOWED_HOSTS: "127.0.0.1,localhost",
+            ZIGZAG_MODEL_MODE: "fixture",
+            ZIGZAG_DATA_DIR: dataDir,
+            ZIGZAG_FIXTURES_PATH: resolve(repo, "fixtures/journeys.json"),
+            ZIGZAG_ALLOWED_HOSTS: "127.0.0.1,localhost",
           },
           stdout: "pipe",
         },
@@ -48,7 +48,7 @@ export default defineConfig({
           command: `vite preview --port ${webPort} --strictPort`,
           url: `http://127.0.0.1:${webPort}`,
           reuseExistingServer: false,
-          env: { INTENT_API_ORIGIN: `http://127.0.0.1:${apiPort}` },
+          env: { ZIGZAG_API_ORIGIN: `http://127.0.0.1:${apiPort}` },
         },
       ],
 });

@@ -2,8 +2,9 @@
 
 import pytest
 
-from intent_harness.domain.model import Project
-from intent_harness.domain.transitions import (
+from tests.support import AMBIGUOUS, CLEAR, FOCUS_QUESTION, at, project_from, question
+from zigzag.domain.model import Project
+from zigzag.domain.transitions import (
     Outcome,
     Rejected,
     defer_question,
@@ -13,7 +14,6 @@ from intent_harness.domain.transitions import (
     remove_statement,
     select_option,
 )
-from tests.support import AMBIGUOUS, CLEAR, FOCUS_QUESTION, at, project_from, question
 
 CLEAR_P = project_from(CLEAR, "clear brief")
 AMB = project_from(AMBIGUOUS, "ambiguous brief")

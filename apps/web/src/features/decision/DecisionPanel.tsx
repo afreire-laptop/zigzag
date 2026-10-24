@@ -1,4 +1,4 @@
-import type { QuestionView } from "@intent-harness/api-client";
+import type { QuestionView } from "@zigzag/api-client";
 import { type FormEvent, type Ref, useId, useState } from "react";
 import { Button } from "@/design-system/ui/button";
 import { Card, CardContent, CardHeader } from "@/design-system/ui/card";

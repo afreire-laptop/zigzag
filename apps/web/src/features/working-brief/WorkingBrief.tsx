@@ -1,4 +1,4 @@
-import type { ProjectView, QuestionView, StatusView } from "@intent-harness/api-client";
+import type { ProjectView, QuestionView, StatusView } from "@zigzag/api-client";
 import { type RefObject, useState } from "react";
 import { plural } from "@/design-system/lib/format";
 import { Button } from "@/design-system/ui/button";

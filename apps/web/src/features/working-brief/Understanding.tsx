@@ -1,4 +1,4 @@
-import type { IntentSectionView, StatementView } from "@intent-harness/api-client";
+import type { IntentSectionView, StatementView } from "@zigzag/api-client";
 import { type FormEvent, useId, useState } from "react";
 import { Button } from "@/design-system/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/design-system/ui/card";

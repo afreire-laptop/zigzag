@@ -1,5 +1,5 @@
 {
-  "name": "intent-harness",
+  "name": "zigzag",
   "private": true,
   "packageManager": "pnpm@12.9.1",
   "engines": {
@@ -20,7 +20,7 @@
     "readiness": "python3 scripts/readiness.py",
     "e2e": "turbo run e2e",
     "docker:smoke": "sh scripts/docker-smoke.sh",
-    "eval": "pnpm --filter @intent-harness/api run eval"
+    "eval": "pnpm --filter @zigzag/api run eval"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",

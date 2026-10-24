@@ -7,16 +7,17 @@ from typing import Any
 
 import pytest
 
-from intent_harness.domain.handoff import (
+from tests.support import CLEAR, GOLDEN, LEGACY_HANDOFF_FORMAT, as_current_format, project_from, validated
+from zigzag.domain.handoff import (
     HANDOFF_ADAPTER,
     build_handoff,
     current_exports,
     diff_handoffs,
 )
-from intent_harness.domain.invariants import check_invariants
-from intent_harness.domain.model import Project, last_review
-from intent_harness.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
-from intent_harness.domain.transitions import (
+from zigzag.domain.invariants import check_invariants
+from zigzag.domain.model import Project, last_review
+from zigzag.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
+from zigzag.domain.transitions import (
     Rejected,
     apply_reassessment,
     apply_user_text,
@@ -28,7 +29,6 @@ from intent_harness.domain.transitions import (
     remove_statement,
     select_option,
 )
-from tests.support import GOLDEN, validated
 
 SCENARIOS = sorted(p for p in GOLDEN.glob("*.json") if p.name != "validation.json")
 F3 = "ambiguous-deferred-by-reply-then-selected"
@@ -93,7 +93,7 @@ def without_partial(document: str) -> str:
 
 @pytest.mark.parametrize("path", SCENARIOS, ids=lambda p: Path(p).stem)
 def test_replay_reproduces_legacy_records_and_exports(path: Path) -> None:
-    scenario = json.loads(path.read_text())
+    scenario = json.loads(as_current_format(path.read_text()))
     project: Project | None = None
     for step, snap in zip(scenario["steps"], scenario["snapshots"], strict=True):
         project, notes = apply(project, step)
@@ -132,6 +132,14 @@ def test_replay_reproduces_legacy_records_and_exports(path: Path) -> None:
             assert [
                 {"section": c.section, "added": list(c.added), "removed": list(c.removed)} for c in changes
             ] == expected
+
+
+def test_current_exports_name_the_zigzag_format() -> None:
+    """The replay maps the legacy id to HANDOFF_FORMAT, so this pins the identifier itself."""
+    exports = current_exports(project_from(CLEAR, "clear brief"))
+    assert json.loads(exports.json)["format"] == "zigzag.handoff/v0"
+    assert "_zigzag.handoff/v0 · project test1 · " in exports.markdown
+    assert LEGACY_HANDOFF_FORMAT not in exports.json + exports.markdown
 
 
 def test_f3_is_corrected_the_deferral_inside_a_reply_is_marked_partly_superseded() -> None:

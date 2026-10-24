@@ -4,10 +4,10 @@ from collections.abc import Callable
 
 import pytest
 
-from intent_harness.domain.invariants import check_invariants
-from intent_harness.domain.model import OptionSource, Project, QuoteSource
-from intent_harness.domain.transitions import Rejected, defer_question, mark_reviewed, select_option
 from tests.support import AMBIGUOUS, CLEAR, FOCUS_QUESTION, at, project_from, question
+from zigzag.domain.invariants import check_invariants
+from zigzag.domain.model import OptionSource, Project, QuoteSource
+from zigzag.domain.transitions import Rejected, defer_question, mark_reviewed, select_option
 
 
 def ok(outcome: Project | Rejected) -> Project:

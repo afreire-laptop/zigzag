@@ -9,10 +9,10 @@ from typing import Literal
 import httpx
 import pytest
 
-from intent_harness.adapters.model.openrouter import DEFAULT_BASE_URL, OpenRouterClient
-from intent_harness.application.assessment import PROMPT_VERSION, Json, LiveAssessor, provider_schema
-from intent_harness.application.ports import AssessRequest, CallAttempt, CompletionRequest, ModelCallError
 from tests.support import CLEAR, text
+from zigzag.adapters.model.openrouter import DEFAULT_BASE_URL, OpenRouterClient
+from zigzag.application.assessment import PROMPT_VERSION, Json, LiveAssessor, provider_schema
+from zigzag.application.ports import AssessRequest, CallAttempt, CompletionRequest, ModelCallError
 
 pytestmark = pytest.mark.anyio
 REQUEST = CompletionRequest(
@@ -84,7 +84,7 @@ async def test_request_shape_and_successful_reading() -> None:
     request = seen[0]
     assert str(request.url) == "https://openrouter.ai/api/v1/chat/completions"
     assert request.headers["authorization"] == "Bearer sk-or-test"
-    assert request.headers["x-openrouter-title"] == "Intent Harness"
+    assert request.headers["x-openrouter-title"] == "zigzag"
     body = json.loads(request.content)
     assert body == {
         "model": "anthropic/claude-opus-5.5",

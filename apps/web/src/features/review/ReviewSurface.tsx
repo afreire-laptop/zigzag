@@ -1,4 +1,4 @@
-import type { HandoffView, ProjectView } from "@intent-harness/api-client";
+import type { HandoffView, ProjectView } from "@zigzag/api-client";
 import { useEffect, useState } from "react";
 import { formatTime, plural } from "@/design-system/lib/format";
 import { Button } from "@/design-system/ui/button";

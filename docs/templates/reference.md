@@ -4,6 +4,6 @@
 
 <One paragraph: what this is, and who relies on it.>
 
-## <Section per part of the format>
+## <One section per part of the format>
 
-<Fields, meanings, and invariants. Describe the current behavior only. History belongs in ADRs.>
+<Each field with its type, whether it is required, its meaning, and its invariants, then one example. Describe current behavior only; history belongs in ADRs.>

@@ -1,6 +1,6 @@
 // Interaction state for the two surfaces. The API owns every domain transition; this hook only sends user
 // actions, follows model operations to their persisted end, and shows the saved result.
-import type { CurrentProjectView, Operation, ProjectView, RecoveryView, StatusView } from "@intent-harness/api-client";
+import type { CurrentProjectView, Operation, ProjectView, RecoveryView, StatusView } from "@zigzag/api-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Api, type Decide, type Failure, RequestFailed } from "@/platform/api";
 import type { WatchDeps } from "@/platform/watch-operation";

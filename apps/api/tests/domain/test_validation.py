@@ -6,9 +6,9 @@ from typing import Any
 
 import pytest
 
-from intent_harness.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
-from intent_harness.domain.transitions import Rejected, defer_question
 from tests.support import AMBIGUOUS, FOCUS_QUESTION, SOFTWARE_QUESTION, at, project_from, question, text
+from zigzag.domain.proposal import Invalid, ProposalContext, Valid, validate_proposal
+from zigzag.domain.transitions import Rejected, defer_question
 
 AMB = project_from(AMBIGUOUS, "ambiguous brief")
 FOCUS = question(AMB, FOCUS_QUESTION).id

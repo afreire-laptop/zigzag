@@ -1,4 +1,4 @@
-import type { DecisionView, InputView } from "@intent-harness/api-client";
+import type { DecisionView, InputView } from "@zigzag/api-client";
 import { formatTime } from "@/design-system/lib/format";
 import { Badge } from "@/design-system/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/design-system/ui/card";
