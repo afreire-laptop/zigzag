@@ -2,8 +2,8 @@
 
 Each reviewer runs in its own detached git worktree, for two reasons. First, the Codex plugin's SessionEnd hook
 stops the Codex runtime of the workspace whenever any Claude Code session there ends, so a review sharing the
-main checkout can be cut off by an unrelated session (finding W4). Second, the checkout omits docs/records/, so
-other reviewers' conclusions are not in it (finding D6). That is not isolation: a reviewer can still reach the main
+main checkout can be cut off by an unrelated session. Second, the checkout omits docs/records/, so
+other reviewers' conclusions are not in it. That is not isolation: a reviewer can still reach the main
 repository by absolute path, or git history, so the prompt must still forbid reading them. The checkout is removed
 afterwards.
 """
