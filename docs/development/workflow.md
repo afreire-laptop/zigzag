@@ -1,6 +1,6 @@
 # Development workflow
 
-**Status:** Current · **Updated:** 2026-10-24
+**Status:** Current · **Updated:** 2026-11-03
 
 A change moves from request to pull request in six stages, and every step can be done by hand. The agent skills in `.agents/skills/` guide AI-assisted runs through the same steps. They are guidance; the scripts listed under [Gates](#gates) are the enforcement.
 
@@ -61,7 +61,7 @@ A `READY` with deferred findings says so in its title. It also lists every high 
 ### What readiness cannot establish
 
 - Whether a disposition is right. Reviewers and the owner judge that.
-- Whether a report is genuine. Its contents, provenance, and claimed commits are taken as declared, and nothing authenticates a report written by hand. This is finding X2 in [the agent workflow run record](../records/2026-10-06-agentic-workflow.md), deferred for this local, single-user workflow; the owner accepted the limitation on 2026-10-07.
+- Whether a report is genuine. Its contents, provenance, and claimed commits are taken as declared, and nothing authenticates a report written by hand. The owner accepted this limitation for the local, single-user workflow on 2026-10-07.
   - `scripts/claude_review.py` and `scripts/codex_review.py` print evidence blocks filled from the actual run: the session or thread id, the version, the models, and the commits. A reader can trace those ids.
   - The evidence stays in the git-ignored `.reviews/`, so a pull request cannot supply it.
 - Whether the owner accepted a deferral. The readiness report flags high and critical deferrals; the acceptance itself lives in the tracking document.
@@ -91,7 +91,7 @@ The repository is public, so it keeps summaries of review runs, not their raw ou
 
 Use a specialist when its scope helps. Do not dispatch every agent for every task.
 
-[The agent workflow run record](../records/2026-10-06-agentic-workflow.md) summarizes what was observed with Claude Code 2.1.292:
+These were observed with Claude Code 2.1.292 on 2026-10-06:
 
 - All four agents resolved `sonnet` to `claude-sonnet-5-5`.
 - The reviewers resolved to exactly Read, Grep, and Glob. When Bash is present, this build drops Grep and Glob, so the engineers resolved to Read, Edit, Write, and Bash, and they search through Bash.
@@ -105,12 +105,12 @@ Use a specialist when its scope helps. Do not dispatch every agent for every tas
 
 Each launcher reviews its own temporary git worktree of `HEAD`, with `docs/records/` removed, so the two can run at the same time.
 
-The checkout is separate because the Codex plugin's `SessionEnd` hook stops the workspace's Codex runtime whenever any Claude Code session in that workspace ends. In round 2 of the agent workflow review, that stopped a Codex review that shared the main checkout (finding W4).
+The checkout is separate because the Codex plugin's `SessionEnd` hook stops the workspace's Codex runtime whenever any Claude Code session in that workspace ends. That once stopped a Codex review that shared the main checkout.
 
-The checkout has neither `docs/records/` nor the git-ignored `.reviews/`, so earlier conclusions are not in it (finding D6). This is not isolation:
+The checkout has neither `docs/records/` nor the git-ignored `.reviews/`, so earlier conclusions are not in it. This is not isolation:
 
-- a reviewer can still open the main repository by absolute path, and Codex can read git history, so the prompt's instruction not to read other reviews still matters (E2);
-- reports must be written outside the reviewer's inputs directory, and `claude_review.py` refuses an `--out` inside `--inputs` (E1).
+- a reviewer can still open the main repository by absolute path, and Codex can read git history, so the prompt's instruction not to read other reviews still matters;
+- reports must be written outside the reviewer's inputs directory, and `claude_review.py` refuses an `--out` inside `--inputs`.
 
 Both launchers print an evidence block filled from the run, and exit 0 only when a report was produced. Otherwise, including when the checkout cannot be made, they print `status: incomplete`, exit 4, and leave no report file. `codex_review.py` exits 3 when Codex is unavailable and prints the setup steps; record that review as `blocked`.
 

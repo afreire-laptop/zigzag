@@ -1,5 +1,5 @@
-"""File persistence: atomic replacement, refusal of inconsistent records, and compatibility with records
-written by the legacy implementation."""
+"""File persistence: atomic replacement, refusal of inconsistent records, and stored records that load, save,
+and export exactly as they were written."""
 
 import json
 import os
@@ -7,10 +7,21 @@ from pathlib import Path
 
 import pytest
 
-from tests.support import CLEAR, GOLDEN, LEGACY_HANDOFF_FORMAT, as_current_format, failing_fsync, project_from
-from zigzag.adapters.persistence.files import FileOperationStore, FileProjectStore, InconsistentRecordError
+from tests.goldens import SCENARIOS, read, snapshot
+from tests.support import CLEAR, failing_fsync, project_from
+from zigzag.adapters.persistence.files import (
+    FileOperationStore,
+    FileProjectStore,
+    InconsistentRecordError,
+    project_text,
+)
 from zigzag.application.ports import Corrupt, Found, Missing
-from zigzag.domain.handoff import current_exports
+
+
+def test_save_writes_exactly_the_project_text(tmp_path: Path) -> None:
+    project = project_from(CLEAR, "clear brief", project_id="p1")
+    FileProjectStore(tmp_path).save(project)
+    assert (tmp_path / "projects" / "p1.json").read_text(encoding="utf-8") == project_text(project)
 
 
 def test_save_replaces_atomically_and_leaves_no_temporary_files(tmp_path: Path) -> None:
@@ -108,30 +119,16 @@ def test_a_file_holding_another_project_is_reported(tmp_path: Path) -> None:
     assert "holds project p1" in loaded.reason
 
 
-@pytest.mark.parametrize(
-    "path", sorted(p for p in GOLDEN.glob("*.json") if p.name != "validation.json"), ids=lambda p: p.stem
-)
-def test_records_written_by_the_legacy_implementation_load_and_export_unchanged(tmp_path: Path, path: Path) -> None:
-    scenario = json.loads(path.read_text())
-    store = FileProjectStore(tmp_path)
-    final = scenario["snapshots"][-1]
+@pytest.mark.parametrize("path", SCENARIOS, ids=lambda p: p.stem)
+def test_a_stored_record_loads_saves_and_exports_exactly_as_written(tmp_path: Path, path: Path) -> None:
+    final = read(path)["snapshots"][-1]
     project_id = json.loads(final["storedFile"])["id"]
-    (tmp_path / "projects" / f"{project_id}.json").write_text(final["storedFile"])
+    store = FileProjectStore(tmp_path)
+    (tmp_path / "projects" / f"{project_id}.json").write_text(final["storedFile"], encoding="utf-8")
     loaded = store.load(project_id)
     assert isinstance(loaded, Found), loaded
-    if final["exports"]["status"] == "reviewed":
-        assert loaded.project.reviews
-    # Reviewed copies stay exactly as they were at review time, including the format id they were exported with.
-    for review in loaded.project.reviews:
-        assert LEGACY_HANDOFF_FORMAT in review.json_copy
-        assert LEGACY_HANDOFF_FORMAT in review.markdown
-    if final["exports"]["status"] == "reviewed" or scenario["name"] != "ambiguous-deferred-by-reply-then-selected":
-        exports = current_exports(loaded.project)
-        expected = final["exports"]
-        # A reviewed revision exports its copies from review time; a draft is rendered now, with the current format id.
-        reviewed = expected["status"] == "reviewed"
-        want = [text if reviewed else as_current_format(text) for text in (expected["markdown"], expected["json"])]
-        assert [exports.markdown, exports.json] == want
+    assert project_text(loaded.project) == final["storedFile"]
+    assert snapshot((loaded.project, ()))["exports"] == final["exports"]
 
 
 def test_unreadable_operation_files_are_reported_not_deleted(tmp_path: Path) -> None:

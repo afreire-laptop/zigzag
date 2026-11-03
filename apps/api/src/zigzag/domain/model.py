@@ -1,7 +1,7 @@
 """The single project record. Immutable values; transitions return new records.
 
-Field names, order, and the camelCase wire form match the record files the POC already wrote
-(`schemaVersion: 1`), so existing projects load unchanged.
+Field names and the camelCase wire form are the stored record format (`schemaVersion: 1`), so changing either
+changes every stored project.
 """
 
 from collections.abc import Mapping

@@ -27,7 +27,7 @@ ABSOLUTE_PATH = re.compile(r"(/Users/|/home/|/private/tmp|[A-Za-z]:\\\\)")
 SKILL_NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 STATUS = "**Status:**"
 TEXT_SUFFIXES = {".md", ".py", ".ts", ".tsx", ".sh", ".yml", ".yaml", ".toml", ".cjs", ".json"}
-SKIPPED_PREFIXES = ("packages/api-client/src/generated/", "fixtures/legacy-golden/", "scripts/tests/")
+SKIPPED_PREFIXES = ("packages/api-client/src/generated/", "fixtures/golden/", "scripts/tests/")
 # Run records are public summaries. Raw review output, which names these, stays in the git-ignored .reviews/.
 RECORD_PREFIX = "docs/records/"
 RECORD_LEAKS = (

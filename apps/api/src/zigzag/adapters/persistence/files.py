@@ -55,6 +55,11 @@ def _write_atomically(target: Path, text: str) -> None:
             os.close(directory)
 
 
+def project_text(project: Project) -> str:
+    """The exact text of a project's file."""
+    return json.dumps(project.model_dump(mode="json"), indent=2, ensure_ascii=False) + "\n"
+
+
 def _reason(error: ValidationError) -> str:
     first = error.errors()[0]
     return f"{'.'.join(str(p) for p in first['loc']) or 'file'}: {first['msg']}"
@@ -104,9 +109,7 @@ class FileProjectStore:
         problems = check_invariants(project)
         if problems:
             raise InconsistentRecordError(f"Refusing to save an inconsistent project: {' '.join(problems)}")
-        _write_atomically(
-            self._path(project.id), json.dumps(project.model_dump(mode="json"), indent=2, ensure_ascii=False) + "\n"
-        )
+        _write_atomically(self._path(project.id), project_text(project))
 
 
 class FileOperationStore:

@@ -1,8 +1,10 @@
 # zigzag: three journeys and a minimal contract
 
-**Status:** Proposed behavior, ready for a small prototype · **Date:** 2026-10-05 · **Basis:** [zigzag tenet v0.1](tenet.md), as revised, with six tenets
+**Status:** Proposed behavior · **Date:** 2026-10-05 · **Basis:** [zigzag tenet v0.1](tenet.md), as revised, with six tenets
 
-These walkthroughs are behavioral fixtures: they fix expected behavior, and they are not specifications or hardcoded answers. They are fictional. All briefs, replies, interview notes, and approvals below are fixture data, and they make no decisions about any existing project. No implementation or user study has yet verified this behavior.
+These walkthroughs are behavioral fixtures: they fix expected behavior, and they are not specifications or hardcoded answers. They are fictional. All briefs, replies, interview notes, and approvals below are fixture data, and they make no decisions about any existing project.
+
+The prototype implements journeys 1 and 2 in fixture mode, and the Playwright journeys check them; journey 3 belongs to the next milestone. Fixture mode replays preset readings, so these checks show that the app handles them, not that a model produces them. No live model or user study has verified this behavior.
 
 ## 1. A clear brief: preserve existing intent
 
