@@ -8,20 +8,12 @@ from typing import Any
 
 import pytest
 
-from zigzag.domain.handoff import HANDOFF_FORMAT
 from zigzag.domain.model import OpenItem, Option, Project
 from zigzag.domain.proposal import ProposalContext, Valid, ValidProposal, validate_proposal
 from zigzag.domain.transitions import create_project
 
 REPO = Path(__file__).resolve().parents[3]
 FIXTURES = REPO / "fixtures"
-GOLDEN = FIXTURES / "legacy-golden"
-LEGACY_HANDOFF_FORMAT = "intent-harness.handoff/v0"
-
-
-def as_current_format(captured: str) -> str:
-    """Captured legacy output with the handoff format id renamed, the one difference the project rename made."""
-    return captured.replace(LEGACY_HANDOFF_FORMAT, HANDOFF_FORMAT)
 
 
 def journeys() -> dict[str, Any]:

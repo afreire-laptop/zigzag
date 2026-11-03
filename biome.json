@@ -10,7 +10,7 @@
       "!**/coverage",
       "!**/test-results",
       "!**/playwright-report",
-      "!fixtures/legacy-golden"
+      "!fixtures/golden"
     ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },

@@ -30,7 +30,7 @@ The next milestone is the changing-brief journey: conflicts, and model-proposed 
   - `design-system/ui`: unmodified shadcn output.
   - `platform/`: the only code that talks to the API.
 - `packages/api-client`: generated from `apps/api/openapi.json`. Only `pnpm contract` writes its `src/generated`.
-- `fixtures/`: journey texts, canned proposals (`journeys.json`), and the legacy goldens the Python domain must reproduce.
+- `fixtures/`: journey texts, canned proposals (`journeys.json`), and the golden snapshots of records, exports, and validation (`golden/`).
 - `docs/`: one folder per document type. [docs/README.md](docs/README.md) says which document a change needs, and lists the templates.
 - `scripts/`: the gates that `pnpm` and CI run, including the docs and readiness checks; the review launchers; and `run_record.py`, which writes a run's public record.
 - `.agents/skills/`: the canonical workflow skills, exposed to Claude Code by relative symlinks in `.claude/skills/`. `.claude/agents/` defines the subagents, and `.claude/hooks/` holds their scope guard.

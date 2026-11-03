@@ -44,7 +44,7 @@ import-linter enforces the layering, and dependency-cruiser enforces the web fea
 
 ### Persistence
 
-- Each project is a JSON file, in the record format `schemaVersion: 1`. Golden files in `fixtures/legacy-golden/` check that records and reviewed exports load and render unchanged.
+- Each project is a JSON file, in the record format `schemaVersion: 1`. Golden snapshots in `fixtures/golden/` pin the stored records and exports byte for byte.
 - Writes use atomic replacement. An in-process lock serializes the whole check-revision, read, modify, save sequence per project.
 - A save raises only if the stored record is unchanged, so every caller can treat a raised save as nothing written. Everything that can fail runs before the rename: opening the directory, and writing and syncing the temporary file. A failed write removes its temporary file.
 - The directory sync that makes the rename durable can only run after the rename. If that sync fails, the new record is already what every reader sees, so the save does not raise. The failure is logged, because on a disk that reports errors the rename may not survive a crash. This risk is accepted for a single-user local tool: such a disk needs attention anyway, and failing the request would wrongly report a visible change as not made.

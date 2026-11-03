@@ -39,9 +39,9 @@
       "result": {
         "ok": false,
         "issues": [
-          "resolutions: Invalid input: expected array, received undefined",
-          "newItems: Invalid input: expected array, received undefined",
-          "focus: Invalid input: expected string, received undefined"
+          "resolutions: Field required",
+          "newItems: Field required",
+          "focus: Field required"
         ]
       }
     },
