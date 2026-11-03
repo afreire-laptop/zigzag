@@ -1,6 +1,6 @@
 # Live-model evaluation protocol
 
-**Status:** Current · **Updated:** 2026-10-24 · **Evaluation records:** [live-model-observations.md](live-model-observations.md)
+**Status:** Current · **Updated:** 2026-11-03 · **Evaluation records:** [live-model-observations.md](live-model-observations.md)
 
 Live observations are kept separate from the deterministic tests. A schema-valid response is necessary, but it does not show that a reading is faithful, so each live run needs a human judgment, recorded with its reason in the evaluation records.
 
@@ -10,9 +10,13 @@ Live observations are kept separate from the deterministic tests. A schema-valid
 pnpm eval --budget-usd N --max-calls N [--repeats N] [--cases a,b]
 ```
 
-This runs the evaluation cases in [apps/api/evals/cases.py](../../apps/api/evals/cases.py) through the configured OpenRouter model, using the app's own validation and state transitions. Every run spends money, so it is never part of CI. It needs `ZIGZAG_MODEL_MODE=live`, `ZIGZAG_OPENROUTER_API_KEY`, and `ZIGZAG_MODEL`, read from the shell or the repository's `.env`; the shell wins.
+This runs the evaluation cases in [apps/api/evals/cases.py](../../apps/api/evals/cases.py) through the configured OpenRouter model, using the app's own validation and state transitions. For example, `pnpm eval --budget-usd 2 --max-calls 40 --repeats 2` runs every case twice. Every run spends money, so it is never part of CI.
 
-`--cases` takes case ids:
+The run refuses to start without `--budget-usd` and `--max-calls`. It counts every request it submits, including automatic retries, and stops if any request's cost is unknown, including a request that timed out after it was sent.
+
+It needs `ZIGZAG_MODEL_MODE=live`, `ZIGZAG_OPENROUTER_API_KEY`, and `ZIGZAG_MODEL`, read from the shell or the repository's `.env`; the shell wins. To evaluate another model without editing `.env`, run `ZIGZAG_MODEL=provider/other-model pnpm eval …`. A variable left exported from an earlier session also wins over `.env`, and the summary's heading names the model the run requested.
+
+`--cases` takes case ids, and the run covers every case when it is omitted:
 
 | Cases | What they cover |
 | --- | --- |
@@ -30,14 +34,14 @@ This runs the evaluation cases in [apps/api/evals/cases.py](../../apps/api/evals
 - the result of each mechanical check;
 - latency;
 - the number of requests submitted, including automatic retries;
-- the reported cost, or *unknown*. It is unknown when any request might have been charged without returning an answer, and the run then stops;
+- the reported cost, or *unknown* when any request might have been charged without returning an answer;
 - failures.
 
-A case whose dependency failed is reported as blocked, and a case the budget stopped as `skipped-budget`; neither is dropped. Raw output in `observations/` is git-ignored.
+A case whose dependency failed is reported as blocked, and a case the budget stopped as `skipped-budget`; neither is dropped.
 
 ## Judging
 
-The summary that the runner writes to `observations/` lists each case's pass and fail criteria, and leaves the human verdict empty. Mechanical checks catch what a rule can catch; whether a reading is faithful stays a human judgment.
+The runner writes the raw results and a summary to the git-ignored `observations/`. The summary lists each case's pass and fail criteria, and leaves the human verdict empty. Mechanical checks catch what a rule can catch; whether a reading is faithful stays a human judgment.
 
 ## What still has to be shown with a real call
 

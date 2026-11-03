@@ -1,6 +1,6 @@
 # Idempotent model starts
 
-**Status:** Ready for implementation; not started · **Updated:** 2026-10-24 · **Scheduled:** before regular live-model use (owner's instruction, 2026-10-06) · **Origin:** Codex pass 7 in the [migration run record](../records/2026-10-06-python-api-migration.md), recorded as a known gap in [ADR 0001](../decisions/0001-python-api-and-workspace.md)
+**Status:** Ready for implementation; not started · **Updated:** 2026-11-03 · **Scheduled:** before regular live-model use (owner's instruction, 2026-10-06) · **Origin:** Codex pass 7 in the [migration run record](../records/2026-10-06-python-api-migration.md), recorded as a known gap in [ADR 0001](../decisions/0001-python-api-and-workspace.md)
 
 ## Problem
 
@@ -65,7 +65,7 @@ Each criterion is an observable test at the highest useful seam: the application
 
 - Write the tests first, and confirm that each one fails against the current runner for the stated reason.
 - Run `pnpm contract`, then `pnpm check`. Because the routes and the web client change, also run `pnpm e2e` and `SMOKE_E2E=1 pnpm docker:smoke`.
-- Update ADR 0001: replace the known gap with the decision, and keep the limits above. Update the README section "How work and data behave".
+- Update ADR 0001: replace the known gap with the decision, and keep the limits above. Update [model work and records](../reference/model-work-and-records.md), and the live-mode warning in the README.
 - Get independent Claude and Codex reviews, per [the development workflow](../development/workflow.md).
 
 ## Likely affected files
