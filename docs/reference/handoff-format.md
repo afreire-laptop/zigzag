@@ -4,8 +4,6 @@
 
 Each saved revision has one handoff object. The API renders both the Markdown and the JSON export from it, so the two cannot disagree. A reviewed revision keeps fixed copies of both, exactly as they were at review time.
 
-Before the project was renamed to zigzag, the identifier was `intent-harness.handoff/v0`, with the same structure. Copies reviewed before the rename keep that identifier, because a reviewed copy never changes.
-
 ## JSON
 
 | Field | Meaning |
@@ -23,8 +21,6 @@ Each `decisions[]` entry has an `id` and an `action` (`brief`, `reply`, `select`
 
 - `supersededBy` names the decision that replaced this one entirely, or is null.
 - `partlySupersededBy` is present only when a later decision replaced part of this one. For example, a reply left a question open and the user answered it later; the statements from that reply stay current. Each element names the item (`itemId`, `itemText`) and the decision that replaced it (`by`).
-
-`partlySupersededBy` was added during the migration. The field is optional and additive, and records that never had a partial supersession export exactly as before.
 
 ## Markdown
 

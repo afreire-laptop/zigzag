@@ -11,13 +11,13 @@ Each document has one job. Put it in the folder for that job, start it from the 
 | Product requirements (PRD) | `prds/` | Users, problem, outcomes, scope, and acceptance for a new capability. | None yet | [prd.md](templates/prd.md) |
 | Technical specifications | `specs/` | How a change is built: behavior, contracts, data, and verification. | [idempotent-model-starts.md](specs/idempotent-model-starts.md) | [spec.md](templates/spec.md) |
 | Architectural decisions (ADR) | `decisions/` | One decision each, with its context and trade-offs. | [0001](decisions/0001-python-api-and-workspace.md), [0002](decisions/0002-publish-a-snapshot-with-run-records.md) | [adr.md](templates/adr.md) |
-| Plans | `plans/` | Execution steps and progress for multi-step work. | [python-api-migration.md](plans/python-api-migration.md) | [plan.md](templates/plan.md) |
+| Plans | `plans/` | Execution steps and progress for multi-step work. | None yet | [plan.md](templates/plan.md) |
 | Reference | `reference/` | A description of a current format, contract, or architecture that users of it need. | [handoff-format.md](reference/handoff-format.md), [model-work-and-records.md](reference/model-work-and-records.md) | [reference.md](templates/reference.md) |
 | Evaluations | `evaluations/` | The protocols for live-model evaluation, and sanitized run evidence. | [live-model-protocol.md](evaluations/live-model-protocol.md), [live-model-observations.md](evaluations/live-model-observations.md) | [evaluation-protocol.md](templates/evaluation-protocol.md), [evaluation-run.md](templates/evaluation-run.md) |
-| Run records | `records/` | One run record per review run: a public summary of its gates, reviewers, findings, and dispositions. Raw reports and the findings register stay in the git-ignored `.reviews/`. | [Python API migration](records/2026-10-06-python-api-migration.md), [agent workflow](records/2026-10-06-agentic-workflow.md), [zigzag rename and docs](records/2026-10-24-zigzag-rename-and-docs.md) | [run-record.md](templates/run-record.md); for `.reviews/`: [review-report.md](templates/review-report.md), [findings-register.md](templates/findings-register.md) |
-| Development guides | `development/` | How to set up, upgrade, change, check, and review this repository. | [workflow.md](development/workflow.md), [upgrading.md](development/upgrading.md) | [guide.md](templates/guide.md) |
+| Run records | `records/` | One run record per review run: a public summary of its gates, reviewers, findings, and dispositions. Raw reports and the findings register stay in the git-ignored `.reviews/`. | None yet | [run-record.md](templates/run-record.md); for `.reviews/`: [review-report.md](templates/review-report.md), [findings-register.md](templates/findings-register.md) |
+| Development guides | `development/` | How to set up, change, check, and review this repository. | [workflow.md](development/workflow.md) | [guide.md](templates/guide.md) |
 
-A folder that has no documents yet, like `prds/`, is not created until it gets one.
+A folder that has no documents yet, like `prds/`, `plans/`, or `records/`, is not created until it gets one.
 
 ## Authoritative sources
 

@@ -1,17 +1,17 @@
 # ADR 0001: Python API, pnpm/Turborepo workspace, and asynchronous model operations
 
-**Status:** Accepted · **Date:** 2026-10-06 · **Supersedes:** the single Express process described in the POC README
+**Status:** Accepted · **Date:** 2026-10-06 · **Supersedes:** none
 
 ## Context
 
-The milestone 1 POC ran as one Express process, with a React client and a shared Zod domain. A read-only audit on 2026-10-06 found the domain sound, and found these gaps:
+A read-only audit of the proof of concept on 2026-10-06 found its domain sound, and set these requirements for the architecture:
 
-- Decisions could not be fully revised. A deferral recorded inside a reply was still displayed as current after the question was answered.
-- Model calls had no deadline, configuration failed open, and provider credentials were inherited implicitly.
-- The UI imported domain functions directly.
-- There was no CI, no container, and no live evidence.
+- Decisions must be fully revisable. A deferral recorded inside a reply must stop reading as current once the question is answered.
+- Model calls need a deadline, configuration must fail closed, and provider credentials must be passed explicitly, never inherited.
+- The UI must not import domain functions.
+- The project needs CI, containers, and live-model evidence.
 
-The owner approved a migration to a Python API and a separately built web application, with OpenRouter as the model gateway.
+The owner approved a Python API and a separately built web application, with OpenRouter as the model gateway.
 
 ## Decision
 
@@ -44,7 +44,7 @@ import-linter enforces the layering, and dependency-cruiser enforces the web fea
 
 ### Persistence
 
-- Each project stays a JSON file, in the record format the POC already used (`schemaVersion: 1`). Existing records and reviewed exports load and render unchanged, which golden files captured from the legacy implementation check.
+- Each project is a JSON file, in the record format `schemaVersion: 1`. Golden files in `fixtures/legacy-golden/` check that records and reviewed exports load and render unchanged.
 - Writes use atomic replacement. An in-process lock serializes the whole check-revision, read, modify, save sequence per project.
 - A save raises only if the stored record is unchanged, so every caller can treat a raised save as nothing written. Everything that can fail runs before the rename: opening the directory, and writing and syncing the temporary file. A failed write removes its temporary file.
 - The directory sync that makes the rename durable can only run after the rename. If that sync fails, the new record is already what every reader sees, so the save does not raise. The failure is logged, because on a disk that reports errors the rename may not survive a crash. This risk is accepted for a single-user local tool: such a disk needs attention anyway, and failing the request would wrongly report a visible change as not made.
@@ -156,7 +156,6 @@ The versions themselves live in the manifests and lockfiles.
 
 - The domain exists only in Python. The UI knows it only through the generated contract and the project view.
 - Running two languages costs some setup. A fresh machine needs only Docker to run the fixture application, and local development needs the tools pinned in `mise.toml`.
-- The legacy Express implementation stays available only until the replacement passes the deterministic gates. It is then removed from the runtime and the tree.
 
 ## Not adopted
 

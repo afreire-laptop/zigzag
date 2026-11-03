@@ -28,7 +28,6 @@ A paid request is never repeated blindly. ADR 0001 gives the reasons, with OpenR
 ## Records
 
 - Records are JSON files in the data directory, which Compose keeps in the `zigzag_data` volume. Each file is replaced atomically, and changes to one project are applied one at a time.
-- Files written by the earlier Express version load unchanged and render the same exports, except that a newly rendered export names the format `zigzag.handoff/v0`.
 - A damaged or inconsistent file is reported with its path instead of being skipped or replaced, and an older project is never shown in its place.
 - A damaged operation record is reported the same way. Model work pauses until you check the brief and move the file out of the data directory, because the record's work may or may not have been applied.
 - Raw model exchanges stay local, in `model-calls.jsonl` in the git-ignored data directory.

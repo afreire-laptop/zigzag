@@ -1,6 +1,6 @@
 # Idempotent model starts
 
-**Status:** Ready for implementation; not started · **Updated:** 2026-11-03 · **Scheduled:** before regular live-model use (owner's instruction, 2026-10-06) · **Origin:** Codex pass 7 in the [migration run record](../records/2026-10-06-python-api-migration.md), recorded as a known gap in [ADR 0001](../decisions/0001-python-api-and-workspace.md)
+**Status:** Ready for implementation; not started · **Updated:** 2026-11-03 · **Scheduled:** before regular live-model use (owner's instruction, 2026-10-06) · **Origin:** the known gap "Starting model work is not idempotent" in [ADR 0001](../decisions/0001-python-api-and-workspace.md), found by an adversarial review on 2026-10-06
 
 ## Problem
 
