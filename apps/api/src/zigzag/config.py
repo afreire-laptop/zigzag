@@ -1,8 +1,9 @@
 """Runtime configuration, read once from an explicit mapping (the process environment in production).
 
 Only `ZIGZAG_*` variables are read, so unrelated shell credentials or base URLs (`OPENAI_*`, `ANTHROPIC_*`,
-`OPENROUTER_*`) can never redirect requests or be sent anywhere. Unknown `ZIGZAG_*` names, leftover `INTENT_*`
-names, invalid values, and incompatible combinations stop startup with every problem listed."""
+`OPENROUTER_*`) can never redirect requests or be sent anywhere. Unknown `ZIGZAG_*` names, invalid values, and
+incompatible combinations stop startup with every problem listed. Names are checked before values, so a misspelt
+name is reported even when a value is also wrong."""
 
 from collections.abc import Mapping
 from pathlib import Path
@@ -11,13 +12,6 @@ from typing import Annotated, Literal, Self
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, ValidationError, model_validator
 
 PREFIX = "ZIGZAG_"
-# The prefix before the project was renamed. A leftover name stops startup rather than being ignored, so an old
-# .env cannot silently fall back to the defaults.
-_OLD_PREFIX = "INTENT_"
-_RETIRED = {
-    "INTENT_EFFORT": "use ZIGZAG_REASONING_EFFORT (low, medium, high, or empty)",
-    "INTENT_MAX_TOKENS": "use ZIGZAG_MAX_OUTPUT_TOKENS",
-}
 
 
 class ConfigError(Exception):
@@ -63,39 +57,24 @@ class Config(BaseModel):
 
 
 def load_config(env: Mapping[str, str]) -> Config:
-    problems: list[str] = []
-    values: dict[str, object] = {}
-    fields = Config.model_fields
-    for name, raw in env.items():
-        if name.startswith(_OLD_PREFIX):
-            problems.append(_old_name(name))
-            continue
-        if not name.startswith(PREFIX):
-            continue
-        key = name.removeprefix(PREFIX).lower()
-        if key not in fields:
-            problems.append(f"{name} is not a known setting.")
-        elif raw.strip() == "":
-            continue  # empty means "use the default", as in .env.example
-        elif key == "allowed_hosts":
-            values[key] = tuple(h.strip() for h in raw.split(",") if h.strip())
-        else:
-            values[key] = raw.strip()
-    if problems:
-        raise ConfigError(problems)
+    settings = [
+        (name, name.removeprefix(PREFIX).lower(), raw.strip()) for name, raw in env.items() if name.startswith(PREFIX)
+    ]
+    unknown = [f"{name} is not a known setting." for name, key, _ in settings if key not in Config.model_fields]
+    if unknown:
+        raise ConfigError(unknown)
+    # An empty value means "use the default", as in .env.example.
+    values = {key: _parse(key, value) for _, key, value in settings if value}
     try:
         return Config.model_validate(values)
     except ValidationError as error:
         raise ConfigError([_describe(e["loc"], e["msg"]) for e in error.errors()]) from error
 
 
-def _old_name(name: str) -> str:
-    if name in _RETIRED:
-        return f"{name} is no longer read; {_RETIRED[name]}."
-    key = name.removeprefix(_OLD_PREFIX)
-    if key.lower() in Config.model_fields:
-        return f"{name} was renamed; use {PREFIX}{key}."
-    return f"{name} is not read; settings use the {PREFIX} prefix."
+def _parse(key: str, value: str) -> object:
+    if key == "allowed_hosts":
+        return tuple(host.strip() for host in value.split(",") if host.strip())
+    return value
 
 
 def _describe(loc: tuple[int | str, ...], message: str) -> str:

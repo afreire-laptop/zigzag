@@ -37,6 +37,11 @@ def test_unrelated_shell_credentials_and_base_urls_are_ignored() -> None:
     assert config.openrouter_base_url == "https://openrouter.ai/api/v1"
 
 
+@pytest.mark.parametrize("name", ["MODEL_MODE", "OPENAI_API_KEY", "ANTHROPIC_MODEL", "APP_MAX_ATTEMPTS"])
+def test_a_variable_without_the_zigzag_prefix_never_stops_startup(name: str) -> None:
+    assert load_config(FIXTURE_ENV | {name: "anything"}) == load_config(FIXTURE_ENV)
+
+
 def test_live_mode_is_explicit_and_needs_its_credentials_and_model() -> None:
     text = problems({"ZIGZAG_MODEL_MODE": "live"})
     assert "needs ZIGZAG_OPENROUTER_API_KEY" in text
@@ -61,8 +66,6 @@ def test_live_mode_is_explicit_and_needs_its_credentials_and_model() -> None:
     [
         ({"ZIGZAG_MODEL_MODE": "fixtur"}, "ZIGZAG_MODEL_MODE"),
         ({"ZIGZAG_MODLE": "x"}, "ZIGZAG_MODLE is not a known setting."),
-        ({"INTENT_EFFORT": "high"}, "use ZIGZAG_REASONING_EFFORT"),
-        ({"INTENT_MAX_TOKENS": "100"}, "use ZIGZAG_MAX_OUTPUT_TOKENS"),
         ({"ZIGZAG_MAX_OUTPUT_TOKENS": "10"}, "ZIGZAG_MAX_OUTPUT_TOKENS"),
         ({"ZIGZAG_OPENROUTER_BASE_URL": "http://plain.example/v1"}, "ZIGZAG_OPENROUTER_BASE_URL"),
         (
@@ -76,32 +79,12 @@ def test_invalid_or_incompatible_settings_stop_startup(env: dict[str, str], expe
     assert expected in problems(FIXTURE_ENV | env)
 
 
-@pytest.mark.parametrize(
-    ("env", "expected"),
-    [
-        ({"INTENT_MODEL_MODE": "value-1"}, "INTENT_MODEL_MODE was renamed; use ZIGZAG_MODEL_MODE."),
-        (
-            {"INTENT_OPENROUTER_API_KEY": "sk-or-1"},
-            "INTENT_OPENROUTER_API_KEY was renamed; use ZIGZAG_OPENROUTER_API_KEY.",
-        ),
-        ({"INTENT_MODLE": "value-3"}, "INTENT_MODLE is not read; settings use the ZIGZAG_ prefix."),
-        ({"INTENT_EFFORT": "value-4"}, "INTENT_EFFORT is no longer read; use ZIGZAG_REASONING_EFFORT"),
-    ],
-)
-def test_settings_with_the_old_prefix_stop_startup_and_name_their_replacement(
-    env: dict[str, str], expected: str
-) -> None:
-    text = problems(FIXTURE_ENV | env)
-    assert expected in text
-    assert next(iter(env.values())) not in text
-
-
-def test_the_names_stage_lists_every_bad_name_before_any_value_is_checked() -> None:
+def test_the_names_stage_lists_every_unknown_name_before_any_value_is_checked() -> None:
     text = problems(
-        FIXTURE_ENV | {"INTENT_MODEL": "secret-model", "ZIGZAG_MODLE": "x", "ZIGZAG_MAX_OUTPUT_TOKENS": "10"}
+        FIXTURE_ENV | {"ZIGZAG_MODLE": "secret-model", "ZIGZAG_MDOEL_MODE": "live", "ZIGZAG_MAX_OUTPUT_TOKENS": "10"}
     )
-    assert "INTENT_MODEL was renamed; use ZIGZAG_MODEL." in text
     assert "ZIGZAG_MODLE is not a known setting." in text
+    assert "ZIGZAG_MDOEL_MODE is not a known setting." in text
     assert "ZIGZAG_MAX_OUTPUT_TOKENS" not in text
     assert "secret-model" not in text
 
