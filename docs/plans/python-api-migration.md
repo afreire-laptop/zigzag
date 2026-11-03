@@ -1,6 +1,6 @@
 # Migration plan: Express POC to a Python API workspace
 
-**Status:** Done locally; merged into local `main` on 2026-10-06. Some acceptance criteria remain unverified (below). · **Updated:** 2026-10-24
+**Status:** Done locally; merged into local `main` on 2026-10-06. Some acceptance criteria remain unverified (below). · **Updated:** 2026-11-03
 
 All stages were implemented on 2026-10-06. The Express implementation was removed from the tree after its replacement passed the gates. The [run record](../records/2026-10-06-python-api-migration.md) has the review dispositions and the accepted limitations.
 
@@ -11,7 +11,7 @@ The approved architecture is recorded in [decisions/0001](../decisions/0001-pyth
 | Criterion | Status | Evidence |
 | --- | --- | --- |
 | `pnpm check` runs every gate locally (stage 2) | Verified locally | Passed uncached at the merged revision. |
-| CI runs the same scripts (stage 2) | Unverified | The workflow file exists, but when the migration closed on 2026-10-06 the branch had never been pushed, so GitHub CI had never run. |
+| CI runs the same scripts (stage 2) | Verified in CI | The branch had not been pushed when the migration closed on 2026-10-06, so GitHub CI had not run. After publication, the CI workflow passed on pushes to `main` on 2026-10-07 and 2026-10-24. |
 | Domain coverage ≥ 90%, goldens, overlapping-request tests, contract drift (stage 3) | Verified locally | Domain lines 99.4%, branches 96.6%. |
 | "Test-first" (stage 3) | Not evidenced by history | Each commit contains its code and tests together, so the history cannot show the order. Existing characterization tests do not prove test-first development. |
 | Deterministic failure tests for timeouts, retries, cancellation, stale results, restart, invalid output (stage 4) | Verified locally, with a stubbed transport | Real provider behavior is unverified; see [the live-model protocol](../evaluations/live-model-protocol.md). |
