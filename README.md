@@ -1,8 +1,12 @@
-# zigzag
+<p align="center">
+  <img src="zigzag_logo.png" alt="zigzag logo" width="160">
+</p>
 
-zigzag is a proof of concept that turns an ambiguous brief into explicit human choices and a reviewed handoff.
+<h1 align="center">zigzag</h1>
 
-Intent changes only through the user's own choices and instructions. Assumptions and unresolved questions stay visible, and the model only proposes. [The product tenet](docs/product/tenet.md) sets the product boundary, and [the journeys](docs/product/journeys.md) fix the expected behavior. [docs/README.md](docs/README.md) maps the rest of the documentation.
+<p align="center">Turning an ambiguous brief into explicit human choices.</p>
+
+zigzag is an AI-powered proof of concept that helps users refine their intent through deliberate choices and instructions. Assumptions and unresolved questions remain explicit, while the model proposes rather than decides. [The product tenet](docs/product/tenet.md) sets the product boundary, and [the journeys](docs/product/journeys.md) fix the expected behavior. Check [docs/README.md](docs/README.md) for additional documentation.
 
 ## Stack
 
@@ -11,7 +15,7 @@ Intent changes only through the user's own choices and instructions. Assumptions
 - OpenRouter for model communication.
 - Docker to run the app.
 
-[ADR 0001](docs/decisions/0001-python-api-and-workspace.md) records the architecture and the reasons for it.
+[ADR 0001](docs/decisions/0001-python-api-and-workspace.md) documents the stack choices.
 
 ## Run it
 
